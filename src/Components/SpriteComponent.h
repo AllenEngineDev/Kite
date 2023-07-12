@@ -8,7 +8,7 @@
 class Sprite : public Component
 {
 public:
-    Sprite(SDL_Renderer* renderer, const char* filepath);
+    Sprite(const char* filepath);
 
     SDL_Texture* GetTexture() const { return m_Texture; }
     Vector2<int> GetSize() const { return m_Size; }

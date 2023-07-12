@@ -1,16 +1,17 @@
 #include "Components/SpriteComponent.h"
+#include "Engine.h"
 #include <filesystem>
 #include <string>
 
-Sprite::Sprite(SDL_Renderer* renderer, const char* filepath)
+Sprite::Sprite(const char* filepath)
 {
+    SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
     int width = 0;
     int height = 0;
     int err = SDL_QueryTexture(m_Texture, NULL, NULL, &width, &height);
 
-    
     m_Size.X = width;
     m_Size.Y = height;
 }

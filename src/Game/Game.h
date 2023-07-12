@@ -1,5 +1,5 @@
 #pragma once
-#include "Entities/Player.h"
+#include "Game/Player.h"
 #include "Engine.h"
 #include "Events/EventManager.h"
 
