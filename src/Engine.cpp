@@ -10,7 +10,6 @@
 
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
-bool Engine::m_Running;
 std::vector<Entity*> Engine::m_Entities;
 
 

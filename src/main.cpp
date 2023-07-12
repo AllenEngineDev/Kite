@@ -2,13 +2,14 @@
 
 int main(int argv, char* args[])
 {
-    bool initSuccess = Engine::Init();
+    Engine engine;
+    bool initSuccess = engine.Init();
     if (!initSuccess) 
     {
         return -1;
     }
 
-    Engine::Run();
-    Engine::CleanUp();
+    engine.Run();
+    engine.CleanUp();
     return 0;
 }
