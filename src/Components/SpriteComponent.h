@@ -5,6 +5,7 @@
 #include "Vector.h"
 #include "Component.h"
 
+// TODO: Rename this to SpriteComponent
 class Sprite : public Component
 {
 public:

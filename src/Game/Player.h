@@ -10,4 +10,9 @@ class Player : public Entity
 {
 public:
     Player(); 
+    void SetPosition(Vector2<int> position);
+    Vector2<int> GetPosition() const { return m_Transform->GetPosition(); }
+private:
+    std::shared_ptr<TransformComponent> m_Transform;
+    std::shared_ptr<Sprite> m_Sprite;
 };

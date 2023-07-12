@@ -14,16 +14,6 @@ bool Engine::m_Running;
 std::vector<Entity*> Engine::m_Entities;
 
 
-void OnKeyDown(const Event& event)
-{
-    const KeyDownEvent* keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
-    if (keyEvent != nullptr)
-    {
-        // Adding a breakpoint here to just check if it's working
-        int t = true;
-    }
-}
-
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {

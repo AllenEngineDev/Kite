@@ -37,6 +37,8 @@ public:
     KeyDownEvent(SDL_KeyboardEvent* keyEvent)
         : m_KeyEvent(keyEvent) { }
 
+    SDL_Scancode GetKeyCode() const { return m_KeyEvent->keysym.scancode; }
+
     EVENT_CLASS_TYPE(KeyDownEvent);
 private:
     SDL_KeyboardEvent* m_KeyEvent;

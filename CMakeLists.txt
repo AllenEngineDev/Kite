@@ -13,9 +13,16 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "src/Entities/*.cpp"
     "src/Game/*.cpp"
      )
-message("SOURCES: ${SOURCES}")
 
-add_executable(SDLEngine ${SOURCES})
+# IMGUI
+file(GLOB IMGUI_SOURCES CONFIGURE_DEPENDS
+    "vendor/imgui/*.cpp")
+
+message("SOURCES: ${SOURCES}")
+message("IMGUI_SOURCES: ${IMGUI_SOURCES}")
+
+
+add_executable(SDLEngine ${SOURCES} ${IMGUI_SOURCES})
 
 # Include directories for my own project
 target_include_directories(SDLEngine PUBLIC "src/")

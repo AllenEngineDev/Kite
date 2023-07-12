@@ -23,9 +23,15 @@ struct Vector2
     Vector2(T x, T y)
         : X(x), Y(y) { }
 
+    // Operators
     Vector2 operator*(const Vector2<T>& other) const
     {
         return Vector2 { X * other.X, Y * other.Y };
+    }
+
+    Vector2 operator+(const Vector2<T>& other) const 
+    {
+        return Vector2 { X + other.X, Y + other.Y };
     }
 
     // For usage like Vector2<int> size = { 5, 5 }; size = size *  4
