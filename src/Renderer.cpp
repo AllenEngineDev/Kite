@@ -45,31 +45,7 @@ void Renderer::SubmitSprite(Sprite sprite)
 // To render an entity, it must have atleast a TransformComponent and a SpriteComponent
 void Renderer::SubmitEntity(Entity* entity)
 {
-
-    
-    // // Getting the Sprite Component
-    // auto sprite = entity->GetComponent<Sprite>();
-    // if (sprite ==  nullptr)
-    //     return;
-
-    // auto transform = entity->GetComponent<TransformComponent>(); 
-    // if (transform == nullptr)
-    //     return;
-
-    // // Position and size of the entity
-    // Vector2<int> targetPosition = transform->GetPosition();
-    // // Multiply the size of the texture by the scale the user wants it
-    // Vector2<int> targetScale = sprite->GetSize() * transform->GetScale();
-    // SDL_Rect dstRect { targetPosition.X, targetPosition.Y, targetScale.X, targetScale.Y }; 
-    // SDL_Rect srcRect;
-    
-    // srcRect.x = 0;
-    // srcRect.y = 0;
-    // srcRect.w = sprite->GetSize().X;
-    // srcRect.h = sprite->GetSize().Y;
-
-    // SDL_RenderCopy(m_Renderer, sprite->GetTexture(), &srcRect, &dstRect);
-    entity->Render();
+    entity->Render(m_Renderer);
 }   
 
 

@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Entities/Entity.h"
 #include "Entities/Player.h"
+#include "Game/Game.h"
 #include "Components/TransformComponent.h"
 #include "Events/EventManager.h"
 #include <cassert>
@@ -11,7 +12,18 @@
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
 bool Engine::m_Running;
+std::vector<Entity*> Engine::m_Entities;
 
+
+void OnKeyDown(const Event& event)
+{
+    const KeyDownEvent* keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
+    if (keyEvent != nullptr)
+    {
+        // Adding a breakpoint here to just check if it's working
+        int t = true;
+    }
+}
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
@@ -26,44 +38,24 @@ bool Engine::Init()
 
     InitWindow("Chicken Burger", 800, 600);
     InitRenderer();
+    m_Running = true;
 
     return true;
 }
 
-
-void OnKeyDown(const Event& event)
-{
-    const KeyDownEvent* keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
-    if (keyEvent != nullptr)
-    {
-        int t = true;
-    }
-}
-
-
 // Main Loop
 void Engine::Run()
 {
-    Entity* player = new Entity;
+    Game game;
+    game.InitializeGame();
 
-    // Creating components
-    // // Sprite
-    // auto sprite = std::make_shared<Sprite>(m_Renderer.GetSDLRenderer(), 
-    //         "../res/gfx/sprites/player/idle/player-idle-1.png");
+    EventFn keyDownCallback = [&game](const Event& event)
+    {
+        game.OnKeyDown(event);
+    };
+    
+    EventManager::AddCallback(EventType::KeyDownEvent, keyDownCallback);
 
-    // // Creating transform component
-    // auto transform = std::make_shared<TransformComponent>();
-    // transform->SetScale(Vector2<int>(5, 5));
-
-    // player->AddComponent(sprite);
-    // player->AddComponent(transform);
-
-    Player pl;
-    pl.GetComponent<TransformComponent>()->SetScale(Vector2<int>(5, 5));
-
-    EventManager::AddCallback(EventType::KeyDownEvent, OnKeyDown);
-
-    m_Running = true;
     SDL_Event event;
     while (m_Running)
     {
@@ -81,11 +73,21 @@ void Engine::Run()
         }
 
         m_Renderer.Clear();
-        m_Renderer.SubmitEntity(&pl);
+        RenderAllEntities();
         m_Renderer.Display();
     }
 
-    delete player;
+}
+
+void Engine::AddEntityToWorld(Entity* entity)
+{
+    m_Entities.emplace_back(entity);
+}
+
+void Engine::RenderAllEntities()
+{
+    for (Entity* entity : m_Entities)
+        entity->Render(m_Renderer.GetSDLRenderer());
 }
 
 // Initializes SDL window. The window can be accessed publicly using Engine::GetWindow()

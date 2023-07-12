@@ -7,6 +7,8 @@
 // Use this in all classes that inherit from Event base class
 #define EVENT_CLASS_TYPE(type) EventType GetType() const override { return EventType::type; }\
 
+
+
 // All Event Types should go in this class, this should be the same name as the class 
 // For example EventType::KeyDownEvent also has a class called KeyDownEvent
 enum class EventType
@@ -25,6 +27,10 @@ private:
     EventType m_Type;
 };
 
+ // If you change these two using definitions, make sure to change them in EventManager.cpp too!
+using EventFn = std::function<void(const Event&)>;
+using EventFnCallbacks = std::vector<EventFn>;
+
 class KeyDownEvent : public Event
 {
 public:
@@ -39,9 +45,7 @@ private:
 class EventManager
 {
 private:
-    // If you change these two using definitions, make sure to change them in EventManager.cpp too!
-    using EventFn = std::function<void(const Event&)>;
-    using EventFnCallbacks = std::vector<EventFn>;
+   
 
     static std::map<EventType, EventFnCallbacks> m_Callbacks;
 public:

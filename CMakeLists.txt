@@ -11,6 +11,7 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "src/Components/*.cpp"
     "src/Events/*.cpp"
     "src/Entities/*.cpp"
+    "src/Game/*.cpp"
      )
 message("SOURCES: ${SOURCES}")
 
