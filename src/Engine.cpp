@@ -104,21 +104,20 @@ void Engine::InitRenderer()
 // Initializes ImGUI
 void Engine::InitImGui()
 {
-    // // Setup Dear ImGui context
-    // IMGUI_CHECKVERSION();
-    // ImGui::CreateContext();
-    // ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    // // Setup Dear ImGui style
-    // ImGui::StyleColorsDark();
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
 
     
-    // // Setup Platform/Renderer bindings
-    // // window is the SDL_Window*
-    // // context is the SDL_GLContext
-    // ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context);
-    // ImGui_ImplOpenGL3_Init();
-
+    // Setup Platform/Renderer bindings
+    // window is the SDL_Window*
+    // context is the SDL_GLContext
+    ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context);
+    ImGui_ImplOpenGL3_Init();
 }
 
 // Cleans up all resources. Usually called after Engine::Run()

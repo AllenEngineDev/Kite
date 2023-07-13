@@ -24,7 +24,7 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
 
 
 
-add_executable(SDLEngine ${SOURCES} ${IMGUI_SOURCES})
+add_executable(SDLEngine ${SOURCES})
 
 # Include directories for my own project"
 target_include_directories(SDLEngine PUBLIC "src/")
@@ -51,19 +51,8 @@ add_library(imgui
      # SDL2+OpenGL-specific files
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdl2.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_opengl3.cpp"
+
 )
-
-
-# Make SDL2 available to Imgui
-target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
-# imgui/backends/ contains the SDL implementation
-target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
-# Configure Imgui to use OpengGL through SDL2
-target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
-
-# So IMGUI can access OpenGL functions
-target_include_directories(imgui PUBLIC ${GLEW_INCLUDE})
-target_link_libraries(imgui PUBLIC ${GLEW_LIB})
 
 target_include_directories(SDLEngine PRIVATE ${GLEW_INCLUDE} "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
 
@@ -72,4 +61,18 @@ target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image
     imgui
     )  
 
+
+# Make SDL2 available to Imgui
+target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
+# imgui/backends/ contains the SDL implementation
+target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
+
+# Configure Imgui to use OpengGL through SDL2
+target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
+
+
+target_include_directories(imgui PUBLIC ${GLEW_INCLUDE})
+
+target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES} ${GLEW_LIB} 
+    "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22000.0/um/x64/OpenGL32.lib")
 
