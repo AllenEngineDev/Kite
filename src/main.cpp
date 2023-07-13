@@ -9,7 +9,6 @@ int main(int argv, char* args[])
     FILE* consoleStream;
     freopen_s(&consoleStream, "CONOUT$", "w", stdout);
 
-
     Engine engine;
     bool initSuccess = engine.Init();
     if (!initSuccess) 

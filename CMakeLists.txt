@@ -18,6 +18,7 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "src/Events/*.cpp"
     "src/Entities/*.cpp"
     "src/Game/*.cpp"
+    "src/Layers/*.cpp"
      )
 
 

@@ -3,15 +3,17 @@
 #include "Game/Game.h"
 #include "Components/TransformComponent.h"
 #include "Events/EventManager.h"
-#include <cassert>
 #include <memory>
 #include <iostream>
-
-#define ASSERT(x) assert(x)
 
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
 std::vector<Entity*> Engine::m_Entities;
+
+void Engine::AttachLayer(Layer* layer)
+{
+    m_LayerStack.AttachLayer(layer);
+}
 
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
@@ -26,6 +28,9 @@ bool Engine::Init()
     int imgInit = IMG_Init(IMG_INIT_PNG);
     if (!imgInit)
         std::cout << "imgInit failed! " << SDL_GetError() << std::endl;
+
+    TestLayer* t = new TestLayer;
+    AttachLayer(t);
 
     InitWindow("Chicken Burger", 800, 600);
     InitRenderer();
@@ -137,7 +142,6 @@ void Engine::InitRenderer()
 // Initializes ImGUI
 void Engine::InitImGui()
 {
-
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -165,4 +169,6 @@ void Engine::CleanUp()
     SDL_DestroyWindow(m_Window);
     m_Renderer.CleanUp();
     SDL_Quit();
+
+    m_LayerStack.DetachAllLayers();
 }

@@ -7,6 +7,11 @@ class LayerStack
 public:
     void AttachLayer(Layer* layer);
     void DetachLayer(Layer*layer);
+    void DetachAllLayers();
+
+    void UpdateLayers();
+    void RenderLayers();
+    void OnEventLayers(const Event& e);
 private:
     std::vector<Layer*> m_Layers;
 };

@@ -6,16 +6,18 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 #include "Renderer.h"
+#include "Layers/LayerStack.h"
+#include "Layers/Layer.h"
 
 
-// TODO: Instead of making all of this static, just make it a class that can be instantiated in 
-// the main function.
+
 class Engine
 {
 public:
     bool Init();
     void Run();  
     void CleanUp();
+    void AttachLayer(Layer* layer);
 
     static SDL_Window* GetWindow() { return m_Window; };
     static Renderer& GetRenderer() { return m_Renderer; }
@@ -24,10 +26,12 @@ public:
     void ImGUISetup();
 
 private:
-    static std::vector<Entity*> m_Entities;
     bool m_Running;
+
+    static std::vector<Entity*> m_Entities;
     static SDL_Window* m_Window;
     static Renderer m_Renderer;
+    LayerStack m_LayerStack;
 
     void InitWindow(const char* title, unsigned int width, unsigned int height);
     void InitRenderer();
