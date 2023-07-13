@@ -4,9 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
-#include "imgui_impl_opengl3.h"
-#include "GL/glew.h"
-#include <SDL_opengl.h>
+#include "imgui_impl_sdlrenderer2.h"
 #include "Renderer.h"
 
 
@@ -24,6 +22,7 @@ public:
     SDL_GLContext m_Context;
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
+    void IMGUIDemoWindow();
 
 private:
     static std::vector<Entity*> m_Entities;

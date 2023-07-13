@@ -32,19 +32,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 27,
+				"line" : 25,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 62,
+				"line" : 59,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 10,
+				"line" : 8,
 				"parent" : 0
 			},
 			{
@@ -58,39 +58,27 @@
 				"parent" : 4
 			},
 			{
-				"command" : 1,
+				"command" : 4,
 				"file" : 0,
-				"line" : 81,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 30,
+				"line" : 31,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 33,
+				"line" : 38,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 40,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 41,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 59,
+				"line" : 39,
 				"parent" : 0
 			}
 		]
@@ -118,35 +106,27 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 7,
+					"backtrace" : 6,
 					"path" : "C:/Dev/SDLEngine/src"
 				},
 				{
-					"backtrace" : 8,
+					"backtrace" : 7,
 					"path" : "C:/Dev/SDLEngine/vendor/imgui"
 				},
 				{
-					"backtrace" : 8,
+					"backtrace" : 7,
 					"path" : "C:/Dev/SDLEngine/vendor/imgui/backends"
 				},
 				{
-					"backtrace" : 9,
+					"backtrace" : 8,
 					"path" : "C:/Dev/SDLEngine/vendor/SDL/include"
 				},
 				{
-					"backtrace" : 10,
+					"backtrace" : 9,
 					"path" : "C:/Dev/SDLEngine/vendor/SDL2Image/include"
 				},
 				{
-					"backtrace" : 11,
-					"path" : "C:/Dev/SDLEngine/vendor/glew/include"
-				},
-				{
-					"backtrace" : 2,
-					"path" : "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl"
-				},
-				{
-					"backtrace" : 9,
+					"backtrace" : 8,
 					"isSystem" : true,
 					"path" : "C:/Dev/SDLEngine/vendor/SDL/include/SDL2"
 				},
@@ -228,16 +208,6 @@
 			{
 				"backtrace" : 5,
 				"fragment" : "-mwindows",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 6,
-				"fragment" : "C:\\Dev\\SDLEngine\\vendor\\glew\\lib\\Release\\x64\\glew32.lib",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 6,
-				"fragment" : "\"C:\\Program Files (x86)\\Windows Kits\\10\\Lib\\10.0.22000.0\\um\\x64\\OpenGL32.lib\"",
 				"role" : "libraries"
 			},
 			{

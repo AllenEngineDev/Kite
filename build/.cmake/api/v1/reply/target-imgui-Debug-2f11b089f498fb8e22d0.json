@@ -27,29 +27,11 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 45,
+				"line" : 43,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
-				"file" : 0,
-				"line" : 75,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 68,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 70,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
 				"file" : 0,
 				"line" : 71,
 				"parent" : 0
@@ -57,7 +39,13 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 78,
+				"line" : 65,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 67,
 				"parent" : 0
 			}
 		]
@@ -95,14 +83,6 @@
 				{
 					"backtrace" : 4,
 					"path" : "C:/Dev/SDLEngine/vendor/imgui/backends"
-				},
-				{
-					"backtrace" : 5,
-					"path" : "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl"
-				},
-				{
-					"backtrace" : 6,
-					"path" : "C:/Dev/SDLEngine/vendor/glew/include"
 				},
 				{
 					"backtrace" : 3,
@@ -188,7 +168,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "vendor/imgui/backends/imgui_impl_opengl3.cpp",
+			"path" : "vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

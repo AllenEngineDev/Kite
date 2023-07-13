@@ -1887,7 +1887,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "general;SDL2::SDL2main;general;SDL2::SDL2;general;C:/Dev/SDLEngine/vendor/glew/lib/Release/x64/glew32.lib;general;C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22000.0/um/x64/OpenGL32.lib;"
+			"value" : "general;SDL2::SDL2main;general;SDL2::SDL2;"
 		}
 	],
 	"kind" : "cache",

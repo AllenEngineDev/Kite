@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(SDLEngine)
 
-set(GLEW_LIB "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glew/lib/Release/x64/glew32.lib" )
-set(GLEW_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/glew/include" )
 set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui" )
 
 
@@ -50,13 +48,12 @@ add_library(imgui
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_widgets.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_demo.cpp"
 
-     # SDL2+OpenGL-specific files
+     # SDL2+SDL2Renderer-specific files
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdl2.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_opengl3.cpp"
-
+     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp"
 )
 
-target_include_directories(SDLEngine PRIVATE ${GLEW_INCLUDE} "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
+target_include_directories(SDLEngine PRIVATE  "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
 
 # Link the SDL, SDL2 image, and IMGUI library
 target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image 
@@ -68,16 +65,14 @@ target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/backends/ contains the SDL implementation
 target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
-target_include_directories(imgui PUBLIC "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl")
 
 
 # Configure Imgui to use OpengGL through SDL2
 target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
 
 
-target_include_directories(imgui PUBLIC ${GLEW_INCLUDE})
+target_include_directories(imgui PUBLIC )
 
 # We need to change the location of OpenGL for it to work for anyone else
-target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES} ${GLEW_LIB} 
-    "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22000.0/um/x64/OpenGL32.lib")
+target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES})
 
