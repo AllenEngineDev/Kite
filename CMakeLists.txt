@@ -57,22 +57,13 @@ target_include_directories(SDLEngine PRIVATE  "${IMGUI_DIR}" "${IMGUI_DIR}/backe
 
 # Link the SDL, SDL2 image, and IMGUI library
 target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image 
-    imgui
-    )  
+    imgui)  
 
 
 # Make SDL2 available to Imgui
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/backends/ contains the SDL implementation
 target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
-
-
-# Configure Imgui to use OpengGL through SDL2
-target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
-
-
-target_include_directories(imgui PUBLIC )
-
-# We need to change the location of OpenGL for it to work for anyone else
+# Link SDL to imgui
 target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES})
 

@@ -19,10 +19,9 @@ public:
 
     static SDL_Window* GetWindow() { return m_Window; };
     static Renderer& GetRenderer() { return m_Renderer; }
-    SDL_GLContext m_Context;
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
-    void IMGUIDemoWindow();
+    void ImGUISetup();
 
 private:
     static std::vector<Entity*> m_Entities;
