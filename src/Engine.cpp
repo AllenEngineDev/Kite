@@ -26,6 +26,7 @@ bool Engine::Init()
 
     InitWindow("Chicken Burger", 800, 600);
     InitRenderer();
+    InitImGui();
     m_Running = true;
 
     return true;
@@ -84,14 +85,39 @@ void Engine::InitWindow(const char* title, unsigned int width, unsigned int heig
     m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
         width, height, SDL_WINDOW_SHOWN);
 
-    ASSERT(m_Window != NULL); 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    m_Context = SDL_GL_CreateContext(m_Window);
 
+    ASSERT(m_Window != NULL); 
 }
+
 
 // Initializes SDL Renderer. The renderer can be accessed publicly using Engine::GetRenderer()
 void Engine::InitRenderer()
 {   
     m_Renderer.Init(m_Window);
+}
+
+// Initializes ImGUI
+void Engine::InitImGui()
+{
+    // // Setup Dear ImGui context
+    // IMGUI_CHECKVERSION();
+    // ImGui::CreateContext();
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    // // Setup Dear ImGui style
+    // ImGui::StyleColorsDark();
+
+    
+    // // Setup Platform/Renderer bindings
+    // // window is the SDL_Window*
+    // // context is the SDL_GLContext
+    // ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context);
+    // ImGui_ImplOpenGL3_Init();
+
 }
 
 // Cleans up all resources. Usually called after Engine::Run()
@@ -100,4 +126,11 @@ void Engine::CleanUp()
     SDL_DestroyWindow(m_Window);
     m_Renderer.CleanUp();
     SDL_Quit();
+
+    // // ImGUI Cleanup
+    // // Cleanup
+    // ImGui_ImplOpenGL3_Shutdown();
+    // ImGui_ImplSDL2_Shutdown();
+    // ImGui::DestroyContext();
+
 }

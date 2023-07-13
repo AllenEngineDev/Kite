@@ -5,7 +5,11 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/vendor/SDL/include",
-                "${workspaceFolder}/vendor/SDL2Image/include"
+                "${workspaceFolder}/vendor/SDL/include",
+                "${workspaceFolder}/vendor/SDL2Image/include",
+                "${workspaceFolder}/vendor/glew/include",
+                "${workspaceFolder}/vendor/imgui",
+                "${workspaceFolder}/vendor/imgui/backends"
             ],
             "defines": [
                 "_DEBUG",

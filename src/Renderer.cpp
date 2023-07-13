@@ -3,7 +3,8 @@
 // Initializes the renderer. Must be called before any other Renderer functions
 void Renderer::Init(SDL_Window* window)
 {
-    m_Renderer = SDL_CreateRenderer(window, -1, 0);
+    m_Renderer = SDL_CreateRenderer(window, -1, 
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     // ASSERT(m_Renderer != NULL); 
 }
 

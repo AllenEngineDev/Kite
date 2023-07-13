@@ -3,6 +3,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "Renderer.h"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
 
 
 // TODO: Instead of making all of this static, just make it a class that can be instantiated in 
@@ -16,6 +19,7 @@ public:
 
     static SDL_Window* GetWindow() { return m_Window; };
     static Renderer& GetRenderer() { return m_Renderer; }
+    SDL_GLContext m_Context;
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
 
@@ -27,5 +31,6 @@ private:
 
     void InitWindow(const char* title, unsigned int width, unsigned int height);
     void InitRenderer();
+    void InitImGui();
 };
 
