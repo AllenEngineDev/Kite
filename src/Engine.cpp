@@ -16,6 +16,7 @@ std::vector<Entity*> Engine::m_Entities;
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
+    glewInit();
     // Initializing SDL2
     int sdlInit = SDL_Init(SDL_INIT_VIDEO);
     ASSERT(sdlInit == 0);
