@@ -48,6 +48,8 @@ add_library(imgui
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_draw.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_tables.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_widgets.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_demo.cpp"
+
      # SDL2+OpenGL-specific files
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdl2.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_opengl3.cpp"
@@ -66,6 +68,8 @@ target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/backends/ contains the SDL implementation
 target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
+target_include_directories(imgui PUBLIC "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/um/gl")
+
 
 # Configure Imgui to use OpengGL through SDL2
 target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_opengl.h>  GL_GLEXT_PROTOTYPES=1)
@@ -73,6 +77,7 @@ target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM=<SDL_ope
 
 target_include_directories(imgui PUBLIC ${GLEW_INCLUDE})
 
+# We need to change the location of OpenGL for it to work for anyone else
 target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES} ${GLEW_LIB} 
     "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22000.0/um/x64/OpenGL32.lib")
 
