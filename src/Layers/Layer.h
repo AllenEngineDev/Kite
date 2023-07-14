@@ -32,14 +32,18 @@ public:
     {
         std::cout << "Detached Layer with name " << GetLayerName() << std::endl;
     }
+
+
     void OnEvent(const Event& event)
     {
-
+        std::cout << event << std::endl;
     }
+
     void OnUpdate()
     {
 
     }
+    
     void OnRender()
     {
 

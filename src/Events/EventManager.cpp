@@ -26,3 +26,10 @@ void EventManager::AddCallback(EventType type, EventFn callback)
 {
     m_Callbacks[type].emplace_back(callback);
 }
+
+// To be able to log events to the console
+// Overload the << operator for Event objects
+std::ostream& operator<<(std::ostream& os, const Event& event) {
+    os << event.ToString();
+    return os;
+}

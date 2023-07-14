@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <functional>
 #include <map>
+#include <string>
+#include <sstream>
 
 // Use this in all classes that inherit from Event base class
 #define EVENT_CLASS_TYPE(type) EventType GetType() const override { return EventType::type; }\
@@ -23,6 +25,10 @@ class Event
 public:
     virtual EventType GetType() const { return m_Type; }
 
+    // Override this for logging purposes when you want to log an event 
+    // Include information about the specific event that happened (eg. key codes)
+    // when overriding
+    virtual std::string ToString() const { return "DefaultEventString"; } 
 private:
     EventType m_Type;
 };
@@ -39,6 +45,13 @@ public:
 
     SDL_Scancode GetKeyCode() const { return m_KeyEvent->keysym.scancode; }
 
+    std::string ToString() const override 
+    {
+        std::stringstream ss;
+        ss << "KeyDownEvent: Keycode: " << GetKeyCode();
+        return ss.str();  
+    }
+
     EVENT_CLASS_TYPE(KeyDownEvent);
 private:
     SDL_KeyboardEvent* m_KeyEvent;
@@ -47,8 +60,6 @@ private:
 class EventManager
 {
 private:
-   
-
     static std::map<EventType, EventFnCallbacks> m_Callbacks;
 public:
     // Calls all functions attached to this EventType
@@ -68,3 +79,6 @@ public:
     }
 
 };
+
+
+std::ostream& operator<<(std::ostream& os, const Event& event);

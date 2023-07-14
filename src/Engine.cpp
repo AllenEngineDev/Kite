@@ -68,7 +68,9 @@ void Engine::Run()
             }
             else if (event.type == SDL_KEYDOWN)
             {
-                EventManager::EventHappened(KeyDownEvent(&event.key));
+                KeyDownEvent keyEvent(&event.key);
+                EventManager::EventHappened(keyEvent); // TODO : GET RID OF THIS AND MAKE THIS WORK THROUGH LAYERS
+                m_LayerStack.OnEventLayers(keyEvent);
             }
         }
 
