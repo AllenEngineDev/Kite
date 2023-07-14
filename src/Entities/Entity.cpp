@@ -1,7 +1,20 @@
 #include "Entity.h"
 #include "Components/SpriteComponent.h"
+#include "Components/IDComponent.h"
 #include "Components/TransformComponent.h"
 #include "Engine.h"
+
+#include <iostream>
+
+Entity::Entity()
+{
+    // All entities will have an ID Component, so it is constructed inside the Entity constructor
+    auto idComponent = AddComponentConstruct<IDComponent>();
+    // This is for ID components to be able to be queried for their parent entities
+    idComponent->SetParent(this);
+
+    std::cout << "Created Entity with ID: " << idComponent->GetID() << std::endl;
+}
 
 void Entity::AddComponent(const std::shared_ptr<Component> component)
 {

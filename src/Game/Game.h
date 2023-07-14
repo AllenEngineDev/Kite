@@ -3,7 +3,6 @@
 #include "Game/Player.h"
 #include "Engine.h"
 #include "Events/EventManager.h"
-#include <SDL2/SDL_scancode.h>
 
 class Game
 {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 #include <functional>
 #include <map>
 #include <string>
@@ -60,6 +61,7 @@ private:
 class EventManager
 {
 private:
+    // TODO: This could be better as an unordered map
     static std::map<EventType, EventFnCallbacks> m_Callbacks;
 public:
     // Calls all functions attached to this EventType

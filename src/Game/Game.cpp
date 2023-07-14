@@ -1,4 +1,5 @@
 #include "Game/Game.h"
+#include <SDL2/SDL_scancode.h>
 
 void Game::InitializeGame()
 {

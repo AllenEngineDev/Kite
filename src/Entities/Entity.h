@@ -9,8 +9,25 @@
 class Entity
 {
 public:
+    Entity(); // For initializing the ID component as all Entities will have this
     virtual void Render();
     void AddComponent(const std::shared_ptr<Component> component);
+
+    // Template function to add a component of a specified type with variadic constructor arguments
+    // To be used as so entity.AddComponentConstruct<SpriteComponent>("filepath")
+    // Returns a std::shared_ptr to the new component
+    template<typename ComponentType, typename... Args>
+    std::shared_ptr<ComponentType> AddComponentConstruct(Args&&... args)
+    {
+        // Create a shared pointer to the component using perfect forwarding of arguments
+        std::shared_ptr<ComponentType> component = std::make_shared<ComponentType>(std::forward<Args>(args)...);
+
+        // Add the component to the list of components
+        m_Components.emplace_back(component);
+
+        // Return the shared pointer to the added component
+        return component;
+    }
 
     // Returns the component if found. Nullptr is returned if not found
     template<typename T>
