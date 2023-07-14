@@ -13,7 +13,7 @@ public:
     void InitializeGame();
 
     // Event callbacks
-    void OnKeyDown(const Event& event);
+    void OnKeyDown(const KeyDownEvent& event);
     
     // Called in the destructor
     void CleanupGame();

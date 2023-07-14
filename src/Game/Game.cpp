@@ -19,26 +19,21 @@ void Game::SetPlayerPosition(Vector2<int> newPos)
 }
 
 // TODO: Make your own Engine specific keycodes rather than using SDL Keycodes
-void Game::OnKeyDown(const Event& event)
+void Game::OnKeyDown(const KeyDownEvent& keyEvent)
 {
-    auto keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
-    if (keyEvent != nullptr)
+    SDL_Scancode code = keyEvent.GetKeyCode();
+    Vector2<int> targetVector;
+    switch (code)
     {
-        int h = 4;
-        SDL_Scancode code = keyEvent->GetKeyCode();
-        Vector2<int> targetVector;
-        switch (code)
-        {
-            case SDL_SCANCODE_A:
-                targetVector = Vector2<int>(-3, 0);
-                break;
-            case SDL_SCANCODE_D:
-                targetVector = Vector2<int>(3, 0);
-                break;
-        }
-
-        m_Player->SetPosition(m_Player->GetPosition() + targetVector);
+        case SDL_SCANCODE_A:
+            targetVector = Vector2<int>(-3, 0);
+            break;
+        case SDL_SCANCODE_D:
+            targetVector = Vector2<int>(3, 0);
+            break;
     }
+
+    m_Player->SetPosition(m_Player->GetPosition() + targetVector);
 }
 
 Game::~Game()
