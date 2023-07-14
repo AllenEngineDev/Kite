@@ -17,7 +17,7 @@ std::vector<Entity*> Engine::m_Entities;
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
-    InitWindow("Chicken Burger", 800, 600);
+    InitWindow("Kite Engine", 800, 600);
     InitRenderer();
 
     GameLayer* gameLayer = new GameLayer;
