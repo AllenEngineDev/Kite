@@ -9,9 +9,9 @@ void Entity::AddComponent(const std::shared_ptr<Component> component)
         m_Components.emplace_back(component);
 }
 
-void Entity::Render(SDL_Renderer* renderer)
+void Entity::Render()
 {
-    //SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
+    SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     // Getting the Sprite Component
     auto sprite = GetComponent<Sprite>();
     if (sprite ==  nullptr)
@@ -32,7 +32,7 @@ void Entity::Render(SDL_Renderer* renderer)
     srcRect.y = 0;
     srcRect.w = sprite->GetSize().X;
     srcRect.h = sprite->GetSize().Y;
-
+    
     SDL_RenderCopy(renderer, sprite->GetTexture(), &srcRect, &dstRect);
 }
 

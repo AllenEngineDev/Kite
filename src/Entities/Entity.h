@@ -9,7 +9,7 @@
 class Entity
 {
 public:
-    virtual void Render(SDL_Renderer* renderer);
+    virtual void Render();
     void AddComponent(const std::shared_ptr<Component> component);
 
     // Returns the component if found. Nullptr is returned if not found

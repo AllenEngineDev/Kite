@@ -16,16 +16,14 @@ std::vector<Entity*> Engine::m_Entities;
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
-    GameLayer* gameLayer = new GameLayer;
-    m_LayerStack.AttachLayer(gameLayer);
-
-    TestLayer* t = new TestLayer;
-    m_LayerStack.AttachLayer(t);
-
     InitWindow("Chicken Burger", 800, 600);
     InitRenderer();
 
+    GameLayer* gameLayer = new GameLayer;
+    m_LayerStack.AttachLayer(gameLayer);
+
     InitImGui();
+    
     m_Running = true;
 
     return true;
@@ -34,20 +32,8 @@ bool Engine::Init()
 // Main Loop
 void Engine::Run()
 {
-    Game game;
-    game.InitializeGame();
-
-    // MOVE THIS TO GAME LAYER
-    EventFn keyDownCallback = [&game](const Event& event)
-    {
-        game.OnKeyDown(event);
-    };
-    
-    EventManager::AddCallback(EventType::KeyDownEvent, keyDownCallback);
-
     while (m_Running)
     {
-
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
@@ -60,7 +46,6 @@ void Engine::Run()
             else if (event.type == SDL_KEYDOWN)
             {
                 KeyDownEvent keyEvent(&event.key);
-                EventManager::EventHappened(keyEvent); // TODO : GET RID OF THIS AND MAKE THIS WORK THROUGH LAYERS
                 m_LayerStack.OnEventLayers(keyEvent);
             }
         }
@@ -70,17 +55,15 @@ void Engine::Run()
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
         ImGUISetup();
-        ImGui::Render();
 
-        // Frame logic goes here
+        // OnUpdate - Frame Logic
         m_LayerStack.UpdateLayers();
-        m_LayerStack.RenderLayers();
 
         // Rendering
+        ImGui::Render();
         m_Renderer.Clear();
-        RenderAllEntities();
+        m_LayerStack.RenderLayers();
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-
         m_Renderer.Display();
 
     }
@@ -105,7 +88,7 @@ void Engine::AddEntityToWorld(Entity* entity)
 void Engine::RenderAllEntities()
 {
     for (Entity* entity : m_Entities)
-        entity->Render(m_Renderer.GetSDLRenderer());
+        entity->Render();
 }
 
 // Initializes SDL window. The window can be accessed publicly using Engine::GetWindow()

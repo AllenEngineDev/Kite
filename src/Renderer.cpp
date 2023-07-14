@@ -1,11 +1,16 @@
 #include "Renderer.h"
+#include <iostream>
 
 // Initializes the renderer. Must be called before any other Renderer functions
 void Renderer::Init(SDL_Window* window)
 {
     m_Renderer = SDL_CreateRenderer(window, -1, 
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    // ASSERT(m_Renderer != NULL); 
+    
+    if (m_Renderer == nullptr)
+    {
+        std::cout << "[ERROR WHEN CREATING RENDERER]: " << SDL_GetError() << std::endl;
+    }
 }
 
 void Renderer::Clear()
@@ -46,7 +51,7 @@ void Renderer::SubmitSprite(Sprite sprite)
 // To render an entity, it must have atleast a TransformComponent and a SpriteComponent
 void Renderer::SubmitEntity(Entity* entity)
 {
-    entity->Render(m_Renderer);
+    entity->Render();
 }   
 
 

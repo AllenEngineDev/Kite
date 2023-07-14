@@ -8,6 +8,12 @@ Sprite::Sprite(const char* filepath)
     SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
+    if (m_Texture == nullptr)
+    {
+        std::cout << "[ERROR WHEN GETTING TEXTURE]: " 
+            <<  SDL_GetError() << " [FILEPATH: " << filepath << " ]" << std::endl;
+    }
+
     int width = 0;
     int height = 0;
     int err = SDL_QueryTexture(m_Texture, NULL, NULL, &width, &height);

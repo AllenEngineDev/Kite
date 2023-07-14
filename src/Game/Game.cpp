@@ -5,12 +5,17 @@ void Game::InitializeGame()
     m_Player = new Player;
         
     m_Player->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(400, 300));
-    Engine::AddEntityToWorld(m_Player);
+    AddEntityToWorld(m_Player);
 
     m_Player2 = new Player;
     m_Player2->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(200, 300));
 
-    Engine::AddEntityToWorld(m_Player2);
+    AddEntityToWorld(m_Player2);
+}
+
+void Game::SetPlayerPosition(Vector2<int> newPos)
+{
+    m_Player->SetPosition(newPos);
 }
 
 // TODO: Make your own Engine specific keycodes rather than using SDL Keycodes
@@ -45,4 +50,15 @@ void Game::CleanupGame()
 {
     delete m_Player;
     delete m_Player2;
+}
+
+void Game::AddEntityToWorld(Entity* entity)
+{
+    m_Entities.emplace_back(entity);
+}
+
+void Game::RenderAllEntities()
+{
+    for (Entity* entity : m_Entities)
+        entity->Render();
 }
