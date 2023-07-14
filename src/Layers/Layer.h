@@ -4,7 +4,7 @@
 #include <string>
 
 // Use this on layers you want to use GetLayerName() on 
-#define LAYER_NAME(x) std::string GetLayerName() { return #x; }
+#define LAYER_NAME(x) std::string GetLayerName() override { return #x; }
 
 // Interface for Layer subclasses
 class Layer
@@ -15,7 +15,7 @@ public:
     virtual void OnEvent(const Event& event) = 0;
     virtual void OnUpdate() = 0;
     virtual void OnRender() = 0;    
-    std::string GetLayerName() { return "DefaultLayerName"; }
+    virtual std::string GetLayerName() { return "DefaultLayerName"; }
 };
 
 class TestLayer : public Layer
@@ -25,25 +25,22 @@ public:
 
     void OnAttach()
     {   
-        std::cout << "Attached Layer with name " << GetLayerName() << std::endl;
     }   
 
     void OnDetach()
     {
-        std::cout << "Detached Layer with name " << GetLayerName() << std::endl;
     }
 
 
     void OnEvent(const Event& event)
     {
-        std::cout << event << std::endl;
     }
 
     void OnUpdate()
     {
 
     }
-    
+
     void OnRender()
     {
 

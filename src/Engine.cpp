@@ -3,6 +3,8 @@
 #include "Game/Game.h"
 #include "Components/TransformComponent.h"
 #include "Events/EventManager.h"
+#include "Layers/GameLayer.h"
+
 #include <memory>
 #include <iostream>
 
@@ -10,27 +12,15 @@ SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
 std::vector<Entity*> Engine::m_Entities;
 
-void Engine::AttachLayer(Layer* layer)
-{
-    m_LayerStack.AttachLayer(layer);
-}
-
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
-    // Initializing SDL2
-    int sdlInit = SDL_Init(SDL_INIT_VIDEO);
-    if (sdlInit != 0)
-        std::cout << "SDL Init failed! " << SDL_GetError() << std::endl;
-
-    // Initializing SDL2_image and error checking
-    int imgInit = IMG_Init(IMG_INIT_PNG);
-    if (!imgInit)
-        std::cout << "imgInit failed! " << SDL_GetError() << std::endl;
+    GameLayer* gameLayer = new GameLayer;
+    m_LayerStack.AttachLayer(gameLayer);
 
     TestLayer* t = new TestLayer;
-    AttachLayer(t);
+    m_LayerStack.AttachLayer(t);
 
     InitWindow("Chicken Burger", 800, 600);
     InitRenderer();
@@ -47,6 +37,7 @@ void Engine::Run()
     Game game;
     game.InitializeGame();
 
+    // MOVE THIS TO GAME LAYER
     EventFn keyDownCallback = [&game](const Event& event)
     {
         game.OnKeyDown(event);
@@ -78,13 +69,14 @@ void Engine::Run()
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
-
         ImGUISetup();
+        ImGui::Render();
 
         // Frame logic goes here
+        m_LayerStack.UpdateLayers();
+        m_LayerStack.RenderLayers();
 
         // Rendering
-        ImGui::Render();
         m_Renderer.Clear();
         RenderAllEntities();
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
@@ -170,7 +162,7 @@ void Engine::CleanUp()
 
     SDL_DestroyWindow(m_Window);
     m_Renderer.CleanUp();
-    SDL_Quit();
+    // SDL_Quit();
 
     m_LayerStack.DetachAllLayers();
 }

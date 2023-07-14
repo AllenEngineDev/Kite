@@ -7,7 +7,6 @@
 #include "imgui_impl_sdlrenderer2.h"
 #include "Renderer.h"
 #include "Layers/LayerStack.h"
-#include "Layers/Layer.h"
 
 
 
@@ -17,7 +16,6 @@ public:
     bool Init();
     void Run();  
     void CleanUp();
-    void AttachLayer(Layer* layer);
 
     static SDL_Window* GetWindow() { return m_Window; };
     static Renderer& GetRenderer() { return m_Renderer; }

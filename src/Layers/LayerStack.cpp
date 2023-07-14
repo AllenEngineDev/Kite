@@ -6,6 +6,8 @@ void LayerStack::AttachLayer(Layer* layer)
 {
     m_Layers.emplace_back(layer);
     layer->OnAttach();
+    std::cout << "Layer named " << layer->GetLayerName() << 
+    " attached to the layer stack. " << std::endl;
 }
 
 // Detaches a layer from the layer stack and runs the OnDetach function on it
@@ -35,6 +37,7 @@ void LayerStack::UpdateLayers()
 // Runs OnRender on all the layers
 void LayerStack::RenderLayers()
 {
+    // TODO: Reverse through the list instead
     for (Layer* layer : m_Layers)
         layer->OnRender();
 }
@@ -52,6 +55,8 @@ void LayerStack::DetachAllLayers()
     for (Layer* layer : m_Layers)
     {
         layer->OnDetach();
+        std::cout << "Layer named " << layer->GetLayerName() << 
+        " detached from the layer stack and will be deleted. " << std::endl;
         delete layer; // All layers will be created on the heap
     }
 
