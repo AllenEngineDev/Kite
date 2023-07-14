@@ -2,12 +2,9 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
 #include "Renderer.h"
 #include "Layers/LayerStack.h"
-
+#include "Layers/ImGuiLayer.h"
 
 
 class Engine
@@ -21,10 +18,10 @@ public:
     static Renderer& GetRenderer() { return m_Renderer; }
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
-    void ImGUISetup();
-
 private:
     bool m_Running;
+
+    ImGuiLayer* m_GuiLayer;
 
     static std::vector<Entity*> m_Entities;
     static SDL_Window* m_Window;
@@ -33,6 +30,5 @@ private:
 
     void InitWindow(const char* title, unsigned int width, unsigned int height);
     void InitRenderer();
-    void InitImGui();
 };
 

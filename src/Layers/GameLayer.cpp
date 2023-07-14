@@ -17,7 +17,6 @@ void GameLayer::OnAttach()
 
 void GameLayer::OnDetach() 
 {
-    SDL_Quit();
 }
 
 void GameLayer::OnUpdate() 
