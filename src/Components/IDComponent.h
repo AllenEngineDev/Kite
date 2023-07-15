@@ -1,18 +1,19 @@
 #pragma once
 #include "Component.h"
+#include "IDManager.h"
+
 #include <random>
+#include <iostream>
 
 class Entity;
 
 class IDComponent : public Component
 {
 public:
-    IDComponent()
-        : m_ID(distribution(generator)) // Initialize m_ID using the generator and distribution
-    {
-    }   
+    IDComponent(Entity* e);
 
     uint64_t GetID() const { return m_ID; }
+
 
 private:
     static std::random_device rd;                   // Obtain a random seed from the hardware
@@ -36,8 +37,3 @@ namespace std {
     };
 }
     
-
-// Define static members outside the class
-std::random_device IDComponent::rd;
-std::mt19937_64 IDComponent::generator(IDComponent::rd());
-std::uniform_int_distribution<uint64_t> IDComponent::distribution;

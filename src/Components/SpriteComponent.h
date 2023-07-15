@@ -18,5 +18,6 @@ public:
     void SetSize(int newSize);
 private:
     SDL_Texture* m_Texture;
+    // Stores the X and Y size of the texture
     Vector2<int> m_Size;
 };

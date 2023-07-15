@@ -9,7 +9,7 @@ class Component
 {
 public:
     Entity& GetParent() const { return *m_Parent; }
-    void SetParent(Entity* entity)
+    void SetParent(Entity* entity) 
     {
         m_Parent = entity;
     } 

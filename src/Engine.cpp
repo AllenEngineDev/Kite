@@ -25,8 +25,6 @@ bool Engine::Init()
 
     m_GuiLayer = new ImGuiLayer(m_Window, m_Renderer.GetSDLRenderer());
     m_LayerStack.AttachLayer(m_GuiLayer);
-
-    //InitImGui();
     
     m_Running = true;
 
@@ -52,11 +50,16 @@ void Engine::Run()
                 KeyDownEvent keyEvent(&event.key);
                 m_LayerStack.OnEventLayers(keyEvent);
             }
+            else if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                MousePressedEvent mouseEvent(&event.button);
+                m_LayerStack.OnEventLayers(mouseEvent);
+            }
         }
 
 
         m_GuiLayer->StartNewFrame();
-        m_GuiLayer->SetupGui();
+        m_GuiLayer->SetupGui(); // TODO: Investigate whether this has to run every frame
 
         // OnUpdate - Frame Logic
         m_LayerStack.UpdateLayers();

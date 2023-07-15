@@ -27,8 +27,18 @@ void GameLayer::OnUpdate()
 void GameLayer::OnEvent(const Event& event) 
 {
     std::cout << event << std::endl;
-    auto keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
-    game.OnKeyDown(*keyEvent);
+    if (event.GetType() == EventType::KeyDownEvent)
+    {
+        auto keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
+        game.OnKeyDown(*keyEvent);
+
+    }
+    else if (event.GetType() == EventType::MousePressedEvent)
+    {
+        auto mouseEvent = EventManager::CastEventToType<MousePressedEvent>(&event);
+        game.OnMousePressed(*mouseEvent);
+    }
+
 }
 
 
@@ -36,3 +46,4 @@ void GameLayer::OnRender()
 {
     game.RenderAllEntities();
 }
+

@@ -7,9 +7,10 @@
 #include <string>
 #include <sstream>
 
+#include "Vector.h"
+
 // Use this in all classes that inherit from Event base class
 #define EVENT_CLASS_TYPE(type) EventType GetType() const override { return EventType::type; }\
-
 
 
 // All Event Types should go in this class, this should be the same name as the class 
@@ -17,6 +18,11 @@
 enum class EventType
 {
     KeyDownEvent,
+    MousePressedEvent,
+
+    // Events that pass across the layers
+    // TODO: Seperate these events that pass across the layers into its own enum class
+    EntitySelectedEvent
 };
 
 // Base class for all events
@@ -58,6 +64,46 @@ private:
     SDL_KeyboardEvent* m_KeyEvent;
 };
 
+
+// When an entity is selected
+class EntitySelectedEvent : public Event
+{
+public:
+    EntitySelectedEvent(uint64_t entityID)
+        : m_EntityID(entityID) { }
+
+    EVENT_CLASS_TYPE(EntitySelectedEvent)
+
+private:
+    uint64_t m_EntityID;
+};
+
+class MousePressedEvent : public Event
+{
+public:
+    MousePressedEvent(SDL_MouseButtonEvent* mouseEvent) 
+        : m_MouseEvent(mouseEvent) { }
+
+    // Returns the position where the mouse was pressed
+    Vector2<int> GetPressedPosition() const
+    {
+        return Vector2<int>(m_MouseEvent->x, m_MouseEvent->y);
+    }
+
+    std::string ToString() const override 
+    {
+        std::stringstream ss;
+        ss << "MousePressedEvent: Position: " << m_MouseEvent->x << ", " << m_MouseEvent->y;
+        return ss.str();  
+    }
+
+    EVENT_CLASS_TYPE(MousePressedEvent);
+
+private:
+    SDL_MouseButtonEvent* m_MouseEvent;
+};
+
+// This is only meant to be used to pass Events along the different layers in the layer stack
 class EventManager
 {
 private:

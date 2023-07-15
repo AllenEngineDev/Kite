@@ -37,15 +37,9 @@ void Game::OnKeyDown(const KeyDownEvent& keyEvent)
     m_Player->SetPosition(m_Player->GetPosition() + targetVector);
 }
 
-Game::~Game()
+void Game::OnMousePressed(const MousePressedEvent& mouseEvent)
 {
-    CleanupGame();
-}
-
-void Game::CleanupGame()
-{
-    delete m_Player;
-    delete m_Player2;
+    CheckForMouseCollisions(mouseEvent.GetPressedPosition());
 }
 
 void Game::AddEntityToWorld(Entity* entity)
@@ -58,3 +52,27 @@ void Game::RenderAllEntities()
     for (Entity* entity : m_Entities)
         entity->Render();
 }
+
+void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
+{
+    for (Entity* e : m_Entities)
+    {
+        if (e->IsColliding(mousePosition))
+        {
+            std::cout << "Entity with ID " << e->GetComponent<IDComponent>()->GetID() << " has been selected!\n";
+        }
+    }
+}
+ 
+
+Game::~Game()
+{
+    CleanupGame();
+}
+
+void Game::CleanupGame()
+{
+    delete m_Player;
+    delete m_Player2;
+}
+

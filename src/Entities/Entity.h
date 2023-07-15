@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Components/Component.h"
+#include "Vector.h"
 
 
 class Entity
@@ -47,6 +48,7 @@ public:
         return nullptr;
     }
 
+    bool IsColliding(Vector2<int> posToCheck);
 private:
     std::vector<std::shared_ptr<Component>> m_Components; 
 };

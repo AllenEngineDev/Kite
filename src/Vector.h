@@ -4,7 +4,7 @@
 #define VECTOR_FLOAT_ONE Vector2<float>(1.0f, 1.0f)
 #define VECTOR_INT_ZERO Vector2<int>(0, 0)
 #define VECTOR_INT_ONE Vector2<int>(1, 1)
-
+#include <iostream>
 
 template<typename T>
 struct Vector2
@@ -34,6 +34,7 @@ struct Vector2
         return Vector2 { X + other.X, Y + other.Y };
     }
 
+
     // For usage like Vector2<int> size = { 5, 5 }; size = size *  4
     // This makes sure Vector2s can be multiplied by scalar quantities. This scalar quantity must be of type T
     Vector2 operator*(const T& other) const
@@ -41,3 +42,10 @@ struct Vector2
         return Vector2 { X * other, Y * other };
     }
 };
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Vector2<T>& vec2)
+{
+    os << "(" << vec2.X << ", " << vec2.Y << ")";
+    return os;
+}

@@ -9,11 +9,10 @@
 Entity::Entity()
 {
     // All entities will have an ID Component, so it is constructed inside the Entity constructor
-    auto idComponent = AddComponentConstruct<IDComponent>();
+    auto idComponent = AddComponentConstruct<IDComponent>(this);
     // This is for ID components to be able to be queried for their parent entities
     idComponent->SetParent(this);
 
-    std::cout << "Created Entity with ID: " << idComponent->GetID() << std::endl;
 }
 
 void Entity::AddComponent(const std::shared_ptr<Component> component)
@@ -47,6 +46,31 @@ void Entity::Render()
     srcRect.h = sprite->GetSize().Y;
     
     SDL_RenderCopy(renderer, sprite->GetTexture(), &srcRect, &dstRect);
+
+
+    // TODO: Make user be able to check whether they want debug graphics or not
+    // ----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &dstRect);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+
 }
 
+// Returns true if the position passed in is within the bounds of the Sprite component added to this Entity
+// That means this function will return false if there is not a Sprite
+// TODO: Make an implementation that doesn't rely on the presence of a sprite component
+bool Entity::IsColliding(Vector2<int> posToCheck)
+{
+    auto transform = GetComponent<TransformComponent>();
+
+    Vector2<int> rectPosition = transform->GetPosition();
+    // Multiplying the size of the Transform by the size of the Texture to get the total size of the Entity
+    Vector2<int> rectSize = transform->GetScale() * GetComponent<Sprite>()->GetSize();
+
+    // Simple Collision check
+    return (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
+            posToCheck.Y >= rectPosition.Y && posToCheck.Y <= rectPosition.Y + rectSize.Y);
+
+}
 
