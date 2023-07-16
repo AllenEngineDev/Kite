@@ -5,13 +5,8 @@ void Game::InitializeGame()
 {
     m_Player = new Player;
         
-    m_Player->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(400, 300));
+    m_Player->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(0, 0));
     AddEntityToWorld(m_Player);
-
-    m_Player2 = new Player;
-    m_Player2->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(200, 300));
-
-    AddEntityToWorld(m_Player2);
 }
 
 void Game::SetPlayerPosition(Vector2<int> newPos)
@@ -60,8 +55,13 @@ void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
         if (e->IsColliding(mousePosition))
         {
             EventManager::EventHappened(EntitySelectedEvent(e));
+            return;
         }
     }
+
+    // If no entity has been selected
+    EventManager::EventHappened(EntitySelectedEvent(nullptr));
+
 }
  
 

@@ -10,7 +10,8 @@
 #include <iostream>
 
 
-
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
 
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
@@ -20,7 +21,7 @@ std::vector<Entity*> Engine::m_Entities;
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
-    InitWindow("Kite Engine", 800, 600);
+    InitWindow("Kite Engine", WINDOW_WIDTH, WINDOW_HEIGHT);
     InitRenderer();
 
     GameLayer* gameLayer = new GameLayer;
@@ -30,6 +31,10 @@ bool Engine::Init()
     m_LayerStack.AttachLayer(m_GuiLayer);
     
     m_Running = true;
+
+    // Setting up event callbacks
+    EventManager::AddCallback(EventType::GuiViewportChange, 
+        std::bind(&Engine::OnGuiViewportChange, this, std::placeholders::_1));
 
     return true;
 }
@@ -60,6 +65,11 @@ void Engine::Run()
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
                 MousePressedEvent mouseEvent(&event.button);
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+                int viewportX = (mouseX - m_ViewportRect.X) * (WINDOW_WIDTH / m_ViewportRect.Width);
+                int viewportY = (mouseY - m_ViewportRect.Y) * (WINDOW_HEIGHT / m_ViewportRect.Height);
+                mouseEvent.SetMousePosition(Vector2<int>(viewportX, viewportY));
                 EventManager::EventHappened(mouseEvent);
             }
         }
@@ -73,7 +83,7 @@ void Engine::Run()
         // ------- RENDERING ---------
         // Clearing the renderer
         m_Renderer.Clear();
-
+        
         // Rendering everything!
         m_LayerStack.RenderLayers();
 
@@ -83,16 +93,6 @@ void Engine::Run()
 }
 
 
-void Engine::AddEntityToWorld(Entity* entity)
-{
-    m_Entities.emplace_back(entity);
-}
-
-void Engine::RenderAllEntities()
-{
-    for (Entity* entity : m_Entities)
-        entity->Render();
-}
 
 // Initializes SDL window. The window can be accessed publicly using Engine::GetWindow()
 void Engine::InitWindow(const char* title, unsigned int width, unsigned int height)
@@ -117,6 +117,20 @@ void Engine::InitWindow(const char* title, unsigned int width, unsigned int heig
 void Engine::InitRenderer()
 {   
     m_Renderer.Init(m_Window);
+}
+
+// ---------- EVENT CALLBACKS ---------
+void Engine::OnGuiViewportChange(const Event& event)
+{
+    const GuiViewportChange& viewportEvent = static_cast<const GuiViewportChange&>(event);
+    m_ViewportRect = viewportEvent.GetRect();
+    SDL_Rect viewport;
+
+    viewport.x = m_ViewportRect.X;
+    viewport.y = m_ViewportRect.Y;
+    viewport.w = m_ViewportRect.Width;
+    viewport.h = m_ViewportRect.Height;
+    SDL_RenderSetViewport(m_Renderer.GetSDLRenderer(), &viewport);
 }
 
 

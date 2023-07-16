@@ -34,7 +34,9 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender()
 {
+    //Renderer::RenderToTexture();
     game.RenderAllEntities();
+    //Renderer::StopRenderingToTexture();
 }
 
 
@@ -51,7 +53,8 @@ void GameLayer::OnKeyDown(const Event& event)
 void GameLayer::OnMousePressed(const Event& event)
 {
     const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
-    game.OnMousePressed(mouseEvent);
+    Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
+    game.CheckForMouseCollisions(pressedPosition);
 }
 
 

@@ -41,31 +41,45 @@ void ImGuiLayer::OnAttach()
     EventManager::AddCallback(EventType::EntitySelectedEvent, 
         std::bind(&ImGuiLayer::OnEntitySelected, this, std::placeholders::_1));
 
-    SDL_Texture* my_texture;
-    int my_image_width, my_image_height;
-    bool ret = Renderer::LoadTextureFromFile("../res/gfx/environment/layers/back.png", 
-        &m_GameTexture, m_ImageWidth, m_ImageHeight, m_Renderer);
-    std::cout << ret << std::endl;
+    // Debug Event Callbacks
+    EventManager::AddCallback(EventType::MousePressedEvent, 
+        std::bind(&ImGuiLayer::OnMousePressed, this, std::placeholders::_1));
 }
 
 
 
 void ImGuiLayer::SetupGui()
 {
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
+         ImGuiDockNodeFlags_PassthruCentralNode);
 
-    ImGui::SetNextWindowSize(ImVec2(400, 300));
-    ImGui::Begin("Game Window");
-    ImGui::Text("pointer = %p", m_GameTexture);
-    ImGui::Text("size = %d x %d", m_ImageWidth, m_ImageHeight);
-    ImGui::Image((void*) m_GameTexture, ImVec2(m_ImageWidth, m_ImageHeight));
+    ImGui::Begin("Main Viewport");
+    ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+    ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+    vMin.x += ImGui::GetWindowPos().x;
+    vMin.y += ImGui::GetWindowPos().y;
+    vMax.x += ImGui::GetWindowPos().x;
+    vMax.y += ImGui::GetWindowPos().y;
+
+    Rect viewportRect(vMin, vMax);
+    EventManager::EventHappened(GuiViewportChange(viewportRect));
 
     ImGui::End();
 
-    ImGui::Begin("Transform Components");
+    ImGui::Begin("Console");
+    ImGui::Text("Rect Position: (%.2f, %.2f)", viewportRect.X, viewportRect.Y);
+    ImGui::Text("Rect Size: (%.2f, %.2f)", viewportRect.Width, viewportRect.Height);
+    for (std::string& output : m_GUIData.ConsoleOutputs)
+        ImGui::Text(output.c_str());
+    ImGui::End();
+
+    ImGui::Begin("Entity list");
+    ImGui::End();
+
 
     if (m_GUIData.SelectedEntity != nullptr)
     {
+        ImGui::Begin("Properties");
         auto transform = m_GUIData.SelectedEntity->GetComponent<TransformComponent>();
         auto idComponent = m_GUIData.SelectedEntity->GetComponent<IDComponent>();
 
@@ -87,9 +101,16 @@ void ImGuiLayer::SetupGui()
         ImGui::Text("Rotation:");
         ImGui::SameLine();
         ImGui::TextColored(ImVec4(1, 1, 1, 1), "%.2f", transform->GetRotationDegrees());
+        ImGui::End();
+
+    }
+    else 
+    {
+        ImGui::Begin("Properties");
+        ImGui::Text("No entity selected");
+        ImGui::End();
     }
 
-    ImGui::End();
 
 }
 
@@ -99,6 +120,15 @@ void ImGuiLayer::OnEntitySelected(const Event &event)
     const auto& entityEvent = static_cast<const EntitySelectedEvent&>(event);
     Entity* entity = entityEvent.GetEntity();
     m_GUIData.SelectedEntity = entity;
+}
+
+void ImGuiLayer::OnMousePressed(const Event &event)
+{
+    const auto& mouseEvent = static_cast<const MousePressedEvent&>(event);
+    Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
+    std::stringstream ss;
+    ss << "Mouse Pressed At (" << pressedPosition.X << ", " << pressedPosition.Y << " )";
+    m_GUIData.ConsoleOutputs.emplace_back(ss.str());
 }
 
 

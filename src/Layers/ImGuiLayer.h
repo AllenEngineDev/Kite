@@ -7,10 +7,13 @@
 #include "Renderer.h"
 #include "Layers/Layer.h"
 
+#include <vector>
+#include <string>
 
 struct GUIData
 {
     Entity* SelectedEntity = nullptr;
+    std::vector<std::string> ConsoleOutputs;
 };  
 
 // TODO: We need to split this into another class for the GameWindow
@@ -32,9 +35,9 @@ public:
 
     // Event Callbacks
     void OnEntitySelected(const Event& event);
+    void OnMousePressed(const Event& event);
 private:
     SDL_Texture* m_GameTexture;
-    int m_ImageWidth, m_ImageHeight;
     SDL_Window* m_Window;
     SDL_Renderer* m_Renderer;
     GUIData m_GUIData;

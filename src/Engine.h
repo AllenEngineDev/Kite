@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Layers/LayerStack.h"
 #include "Layers/ImGuiLayer.h"
+#include "Rect.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -20,9 +21,12 @@ public:
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
 
+    // Event Callbacks
+    void OnGuiViewportChange(const Event& event);
+
 private:
     bool m_Running;
-
+    Rect m_ViewportRect;
     ImGuiLayer* m_GuiLayer;
 
     static std::vector<Entity*> m_Entities;

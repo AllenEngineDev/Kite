@@ -69,8 +69,9 @@ bool Entity::IsColliding(Vector2<int> posToCheck)
     Vector2<int> rectSize = transform->GetScale() * GetComponent<Sprite>()->GetSize();
 
     // Simple Collision check
-    return (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
+    bool result = (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
             posToCheck.Y >= rectPosition.Y && posToCheck.Y <= rectPosition.Y + rectSize.Y);
+    return result;
 
 }
 

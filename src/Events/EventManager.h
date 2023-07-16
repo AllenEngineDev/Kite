@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 
+#include "Rect.h"
 #include "Vector.h"
 #include "Components/IDComponent.h"
 
@@ -23,7 +24,8 @@ enum class EventType
 
     // Events that pass across the layers
     // TODO: Seperate these events that pass across the layers into its own enum class
-    EntitySelectedEvent
+    EntitySelectedEvent,
+    GuiViewportChange
 };
 
 // Base class for all events
@@ -75,7 +77,6 @@ public:
     EntitySelectedEvent(Entity* entity)
         : m_Entity(entity) { }
 
-
     std::string ToString() const override
     {
         std::stringstream ss;
@@ -83,6 +84,8 @@ public:
         return ss.str(); 
     }
 
+    // IMPORTANT - Perform null-checking. If this is nullptr -> this means a mouse event has happened
+    // that has not selected an entity
     Entity* GetEntity() const { return m_Entity; }
 
     EVENT_CLASS_TYPE(EntitySelectedEvent)
@@ -91,16 +94,44 @@ private:
     Entity* m_Entity;
 };
 
+// When the ImGui Viewport is resized -> this is to ensure the rendering viewport also resizes
+class GuiViewportChange : public Event
+{
+public:
+    GuiViewportChange(Rect newRect)
+        : m_Rect(newRect) { }
+    
+    const Rect& GetRect() const { return m_Rect; }
+
+    std::string ToString() const override 
+    {
+        std::stringstream ss;
+        ss << "Viewport changed!: Position: (" << m_Rect.X << ", " << m_Rect.Y << ") Size: ("
+            << m_Rect.Width << ", " << m_Rect.Height << ")";
+        return ss.str();  
+    }
+
+    EVENT_CLASS_TYPE(GuiViewportChange)
+
+private:
+    Rect m_Rect;
+};
+
 class MousePressedEvent : public Event
 {
 public:
     MousePressedEvent(SDL_MouseButtonEvent* mouseEvent) 
-        : m_MouseEvent(mouseEvent) { }
+        : m_MouseEvent(mouseEvent), m_PressedPosition(Vector2<int>(m_MouseEvent->x, m_MouseEvent->y)) { }
 
     // Returns the position where the mouse was pressed
     Vector2<int> GetPressedPosition() const
     {
-        return Vector2<int>(m_MouseEvent->x, m_MouseEvent->y);
+        return m_PressedPosition;
+    }
+
+    void SetMousePosition(const Vector2<int>& newPos)  
+    {
+        m_PressedPosition = newPos;
     }
 
     std::string ToString() const override 
@@ -114,6 +145,7 @@ public:
 
 private:
     SDL_MouseButtonEvent* m_MouseEvent;
+    Vector2<int> m_PressedPosition;
 };
 
 // This is only meant to be used to pass Events along the different layers in the layer stack

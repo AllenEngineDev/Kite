@@ -26,6 +26,4 @@ public:
 
 private:
     bool m_Running;
-
-
 };

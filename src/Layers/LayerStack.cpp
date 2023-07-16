@@ -37,9 +37,8 @@ void LayerStack::UpdateLayers()
 // Runs OnRender on all the layers
 void LayerStack::RenderLayers()
 {
-    // TODO: Reverse through the list instead
-    for (Layer* layer : m_Layers)
-        layer->OnRender();
+    for (auto layerIter = m_Layers.rbegin(); layerIter != m_Layers.rend(); ++layerIter)
+        (*layerIter)->OnRender();
 }
 
 
