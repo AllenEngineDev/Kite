@@ -10,7 +10,8 @@
                 "${workspaceFolder}/vendor/glew/include",
                 "${workspaceFolder}/vendor/imgui",
                 "${workspaceFolder}/vendor/imgui/backends",
-                "${workspaceFolder}/src"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/vendor/stb"
             ],
             "defines": [
                 "_DEBUG",

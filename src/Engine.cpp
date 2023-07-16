@@ -9,6 +9,9 @@
 #include <memory>
 #include <iostream>
 
+
+
+
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
 std::vector<Entity*> Engine::m_Entities;
@@ -31,11 +34,15 @@ bool Engine::Init()
     return true;
 }
 
+
+
 // Main Loop
 void Engine::Run()
 {
     while (m_Running)
     {
+        m_GuiLayer->StartNewFrame();
+
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
@@ -48,17 +55,16 @@ void Engine::Run()
             else if (event.type == SDL_KEYDOWN)
             {
                 KeyDownEvent keyEvent(&event.key);
-                m_LayerStack.OnEventLayers(keyEvent);
+                EventManager::EventHappened(keyEvent);
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
                 MousePressedEvent mouseEvent(&event.button);
-                m_LayerStack.OnEventLayers(mouseEvent);
+                EventManager::EventHappened(mouseEvent);
             }
         }
 
 
-        m_GuiLayer->StartNewFrame();
         m_GuiLayer->SetupGui(); // TODO: Investigate whether this has to run every frame
 
         // OnUpdate - Frame Logic
@@ -117,10 +123,10 @@ void Engine::InitRenderer()
 // Cleans up all resources. Usually called after Engine::Run()
 void Engine::CleanUp()
 {
-
     SDL_DestroyWindow(m_Window);
     m_Renderer.CleanUp();
     SDL_Quit();
+    IMG_Quit();
 
     m_LayerStack.DetachAllLayers();
 }

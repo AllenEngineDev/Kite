@@ -19,6 +19,11 @@ public:
     void Display();
     void CleanUp();
 
+    // TODO: This should really be in a seperate ResourceManager class
+    static bool LoadTextureFromFile
+        (const char* filename, SDL_Texture** texture_ptr, int& width, int& height, SDL_Renderer* renderer); 
+    
+
 private:
     SDL_Renderer* m_Renderer;
 };

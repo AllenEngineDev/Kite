@@ -42,12 +42,6 @@ void LayerStack::RenderLayers()
         layer->OnRender();
 }
 
-// Runs OnEvent on all the layers
-void LayerStack::OnEventLayers(const Event& e)
-{
-    for (Layer* layer : m_Layers)
-        layer->OnEvent(e);
-}
 
 // Detaches every single layer. Call this at the end
 void LayerStack::DetachAllLayers()

@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.0)
 project(SDLEngine)
 
-set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui" )
+set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui-docking" )
+set(STB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb" )
 
 
 # Find SDL and SDL2_image packages
 find_package(SDL2 REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL/lib/cmake")
 find_package(SDL2_image REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL2Image/lib/cmake")
+
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
@@ -40,21 +42,24 @@ target_include_directories(SDLEngine PRIVATE ${SDL2_INCLUDE_DIRS})
 target_include_directories(SDLEngine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL2Image/include")
 
 
+
 # Compiling IMGUI into a library
 add_library(imgui
      # Main Imgui files
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_draw.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_tables.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_widgets.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/imgui_demo.cpp"
+     "${IMGUI_DIR}/imgui.cpp"
+     "${IMGUI_DIR}/imgui_draw.cpp"
+     "${IMGUI_DIR}/imgui_tables.cpp"
+     "${IMGUI_DIR}/imgui_widgets.cpp"
+     "${IMGUI_DIR}/imgui_demo.cpp"
 
      # SDL2+SDL2Renderer-specific files
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdl2.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui/backends/imgui_impl_sdlrenderer2.cpp"
+     "${IMGUI_DIR}/backends/imgui_impl_sdl2.cpp"
+     "${IMGUI_DIR}/backends/imgui_impl_sdlrenderer2.cpp"
+
 )
 
 target_include_directories(SDLEngine PRIVATE  "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
+target_include_directories(SDLEngine PRIVATE "${STB_DIR}")
 
 # Link the SDL, SDL2 image, and IMGUI library
 target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image 
@@ -65,6 +70,6 @@ target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/backends/ contains the SDL implementation
 target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
-# Link SDL to imgui
-target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES})
+# Link SDL and freetypey to imgui
+target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES} )
 

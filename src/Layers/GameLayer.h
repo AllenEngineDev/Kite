@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Layers/Layer.h"
 #include "Game/Game.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -17,15 +18,14 @@ public:
     void OnAttach() override;
     void OnDetach() override;
 
-    void OnEvent(const Event& event) override;
+    void OnKeyDown(const Event& event);
+    void OnMousePressed(const Event& event);
 
     void OnUpdate() override;
     void OnRender() override;
 
-    void CheckForCollisions();
 private:
     bool m_Running;
 
-    static std::vector<Entity*> m_Entities;
 
 };

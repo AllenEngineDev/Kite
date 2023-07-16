@@ -1,11 +1,11 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include "Renderer.h"
 #include "Layers/LayerStack.h"
 #include "Layers/ImGuiLayer.h"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 class Engine
 {
@@ -14,10 +14,12 @@ public:
     void Run();  
     void CleanUp();
 
+
     static SDL_Window* GetWindow() { return m_Window; };
     static Renderer& GetRenderer() { return m_Renderer; }
     static void AddEntityToWorld(Entity* entity);
     void RenderAllEntities();    
+
 private:
     bool m_Running;
 

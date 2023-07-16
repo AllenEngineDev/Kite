@@ -11,7 +11,6 @@ public:
 
     void UpdateLayers();
     void RenderLayers();
-    void OnEventLayers(const Event& e);
 private:
     std::vector<Layer*> m_Layers;
 };

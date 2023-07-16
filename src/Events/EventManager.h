@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Vector.h"
+#include "Components/IDComponent.h"
 
 // Use this in all classes that inherit from Event base class
 #define EVENT_CLASS_TYPE(type) EventType GetType() const override { return EventType::type; }\
@@ -65,17 +66,29 @@ private:
 };
 
 
+class Entity;
+
 // When an entity is selected
 class EntitySelectedEvent : public Event
 {
 public:
-    EntitySelectedEvent(uint64_t entityID)
-        : m_EntityID(entityID) { }
+    EntitySelectedEvent(Entity* entity)
+        : m_Entity(entity) { }
+
+
+    std::string ToString() const override
+    {
+        std::stringstream ss;
+        ss << "Entity Selected Event: Entity ID -> " << m_Entity->GetComponent<IDComponent>()->GetID() ;
+        return ss.str(); 
+    }
+
+    Entity* GetEntity() const { return m_Entity; }
 
     EVENT_CLASS_TYPE(EntitySelectedEvent)
 
 private:
-    uint64_t m_EntityID;
+    Entity* m_Entity;
 };
 
 class MousePressedEvent : public Event

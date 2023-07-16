@@ -59,7 +59,7 @@ void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
     {
         if (e->IsColliding(mousePosition))
         {
-            std::cout << "Entity with ID " << e->GetComponent<IDComponent>()->GetID() << " has been selected!\n";
+            EventManager::EventHappened(EntitySelectedEvent(e));
         }
     }
 }
@@ -72,7 +72,9 @@ Game::~Game()
 
 void Game::CleanupGame()
 {
-    delete m_Player;
-    delete m_Player2;
+    for (Entity* entity : m_Entities)
+        delete entity;
+
+    m_Entities.clear();
 }
 

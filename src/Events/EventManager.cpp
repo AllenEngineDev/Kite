@@ -9,6 +9,7 @@ std::map<EventType, EventFnCallbacks> EventManager::m_Callbacks;
 
 void EventManager::EventHappened(const Event& event)
 {
+    // Getting the event type so we can get the relevant callbacks from m_Callbacks
     EventType type = event.GetType();
 
     if (m_Callbacks.count(type) > 0)

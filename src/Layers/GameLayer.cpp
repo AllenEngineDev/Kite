@@ -1,5 +1,9 @@
 #include "GameLayer.h"
 
+#include <functional>
+
+// Called when the ImGUI Layer is attached to the Engine Layer Stack
+// Contains initialization code as well as setting up EventCallbacks
 void GameLayer::OnAttach()
 {   
     game.InitializeGame();
@@ -12,38 +16,47 @@ void GameLayer::OnAttach()
     int imgInit = IMG_Init(IMG_INIT_PNG);
     if (!imgInit)
         std::cout << "imgInit failed! " << SDL_GetError() << std::endl;
+
+    // Setting up Event Callbacks
+    EventManager::AddCallback(EventType::KeyDownEvent,  
+        std::bind(&GameLayer::OnKeyDown, this, std::placeholders::_1));
+
+    EventManager::AddCallback(EventType::MousePressedEvent,  
+        std::bind(&GameLayer::OnMousePressed, this, std::placeholders::_1));
 }   
 
 
-void GameLayer::OnDetach() 
-{
-}
 
 void GameLayer::OnUpdate() 
 {
     
 }
 
-void GameLayer::OnEvent(const Event& event) 
-{
-    std::cout << event << std::endl;
-    if (event.GetType() == EventType::KeyDownEvent)
-    {
-        auto keyEvent = EventManager::CastEventToType<KeyDownEvent>(&event);
-        game.OnKeyDown(*keyEvent);
-
-    }
-    else if (event.GetType() == EventType::MousePressedEvent)
-    {
-        auto mouseEvent = EventManager::CastEventToType<MousePressedEvent>(&event);
-        game.OnMousePressed(*mouseEvent);
-    }
-
-}
-
-
 void GameLayer::OnRender()
 {
     game.RenderAllEntities();
 }
 
+
+// -------------- EVENT CALLBACKS ------------
+
+// Called when key down is pressed
+void GameLayer::OnKeyDown(const Event& event)
+{
+    const KeyDownEvent& keyEvent = static_cast<const KeyDownEvent&>(event);
+    game.OnKeyDown(keyEvent);
+}
+
+// Called when the mouse button is down
+void GameLayer::OnMousePressed(const Event& event)
+{
+    const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
+    game.OnMousePressed(mouseEvent);
+}
+
+
+// TODO: Create a remove callback function for the EventManager and remove callbacks here
+void GameLayer::OnDetach() 
+{
+    
+}
