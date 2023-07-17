@@ -65,11 +65,6 @@ void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
 }
  
 
-Game::~Game()
-{
-    CleanupGame();
-}
-
 void Game::CleanupGame()
 {
     for (Entity* entity : m_Entities)

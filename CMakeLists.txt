@@ -2,13 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 project(SDLEngine)
 
 set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui-docking" )
-set(STB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb" )
 
 
 # Find SDL and SDL2_image packages
 find_package(SDL2 REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL/lib/cmake")
 find_package(SDL2_image REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL2Image/lib/cmake")
-
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)

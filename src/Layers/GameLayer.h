@@ -6,8 +6,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-// For behaviours relating to all Entities
-// The representation of the game in the editor
+// Wrapper around the Game class
+// Passes events along to the actual Game representation in the editor
 class GameLayer : public Layer
 {
 public:

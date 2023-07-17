@@ -1,14 +1,32 @@
-#include "Engine.h"
-#include <windows.h>
 #include <iostream>
+#include <windows.h>
+
+#include "Engine.h"
+
+// TODO: This is not portable. 
+// Consider using a cross-platform logging library, such as spdlog or glog.
+class Console
+{
+public:
+    Console()
+    {
+        AllocConsole();
+        freopen_s(&m_ConsoleStream, "CONOUT$", "w", stdout);
+    }
+
+    ~Console()
+    {
+        fclose(m_ConsoleStream);
+        FreeConsole();
+    }
+private:
+    FILE* m_ConsoleStream;
+};
 
 int main(int argv, char* args[])
 {
     // Create new console for logging purposes
-    AllocConsole();
-    FILE* consoleStream;
-    freopen_s(&consoleStream, "CONOUT$", "w", stdout);
-
+    Console console;
     Engine engine;
     bool initSuccess = engine.Init();
     if (!initSuccess) 
@@ -19,9 +37,6 @@ int main(int argv, char* args[])
 
     engine.Run();
     engine.CleanUp();
-
-    fclose(consoleStream);
-    FreeConsole();
 
     return 0;
 }

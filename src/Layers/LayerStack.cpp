@@ -1,4 +1,6 @@
 #include "LayerStack.h"
+#include "Core.h"
+
 #include <iostream>
 
 // Attaches a layer to the layer stack and runs the OnAttach function on it
@@ -18,12 +20,14 @@ void LayerStack::DetachLayer(Layer* layer)
     {
         layer->OnDetach();
         m_Layers.erase(layerIterator);
-        return;
     }
+    else 
+    {
+        // If layer was not found in m_Layers
+        ASSERT(true, "ERROR: TRIED TO DETACH LAYER THAT HASN'T BEEN ATTACHED YET")
+    }
+
     
-    // If layer was not found in m_Layers
-    std::cout << "ERROR: TRIED TO DETACH LAYER THAT HASN'T BEEN ATTACHED YET"
-        << std::endl;
 }
 
 // Runs OnUpdate on all the layers

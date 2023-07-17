@@ -34,9 +34,7 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender()
 {
-    //Renderer::RenderToTexture();
     game.RenderAllEntities();
-    //Renderer::StopRenderingToTexture();
 }
 
 
@@ -61,5 +59,5 @@ void GameLayer::OnMousePressed(const Event& event)
 // TODO: Create a remove callback function for the EventManager and remove callbacks here
 void GameLayer::OnDetach() 
 {
-    
+    game.CleanupGame();
 }

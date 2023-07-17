@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Core.h"
 #include "Entities/Entity.h"
 #include "Game/Game.h"
 #include "Components/TransformComponent.h"
@@ -15,8 +16,6 @@ const int WINDOW_HEIGHT = 600;
 
 SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
-std::vector<Entity*> Engine::m_Entities;
-
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
@@ -56,22 +55,8 @@ void Engine::Run()
             {
                m_Running = false; 
                break;
-            }
-            else if (event.type == SDL_KEYDOWN)
-            {
-                KeyDownEvent keyEvent(&event.key);
-                EventManager::EventHappened(keyEvent);
-            }
-            else if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                MousePressedEvent mouseEvent(&event.button);
-                int mouseX = event.button.x;
-                int mouseY = event.button.y;
-                int viewportX = (mouseX - m_ViewportRect.X) * (WINDOW_WIDTH / m_ViewportRect.Width);
-                int viewportY = (mouseY - m_ViewportRect.Y) * (WINDOW_HEIGHT / m_ViewportRect.Height);
-                mouseEvent.SetMousePosition(Vector2<int>(viewportX, viewportY));
-                EventManager::EventHappened(mouseEvent);
-            }
+            } 
+            else { HandleEvents(event); }
         }
 
 
@@ -108,8 +93,7 @@ void Engine::InitWindow(const char* title, unsigned int width, unsigned int heig
 
     SDL_SetWindowMinimumSize(m_Window, 500, 300);
 
-    if (m_Window == NULL)
-        std::cout << "Failed to initialize window " << SDL_GetError() << std::endl; 
+    ASSERT(m_Window != nullptr, "Failed to initialize window!" << SDL_GetError());
 }
 
 
@@ -131,6 +115,31 @@ void Engine::OnGuiViewportChange(const Event& event)
     viewport.w = m_ViewportRect.Width;
     viewport.h = m_ViewportRect.Height;
     SDL_RenderSetViewport(m_Renderer.GetSDLRenderer(), &viewport);
+}
+
+// This handles SDL_Events and sends out the relevant EventHappened signals
+void Engine::HandleEvents(SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+    {
+        KeyDownEvent keyEvent(&event.key);
+        EventManager::EventHappened(keyEvent);
+        break;
+    }
+    case SDL_MOUSEBUTTONDOWN:
+    {
+        MousePressedEvent mouseEvent(&event.button);
+        int mouseX = event.button.x;
+        int mouseY = event.button.y;
+        int viewportX = (mouseX - m_ViewportRect.X) * (WINDOW_WIDTH / m_ViewportRect.Width);
+        int viewportY = (mouseY - m_ViewportRect.Y) * (WINDOW_HEIGHT / m_ViewportRect.Height);
+        mouseEvent.SetMousePosition(Vector2<int>(viewportX, viewportY));
+        EventManager::EventHappened(mouseEvent);
+        break;
+    }
+    }
 }
 
 

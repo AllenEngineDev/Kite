@@ -1,11 +1,7 @@
+#include "Core.h"
 #include "Renderer.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include <iostream>
 
-
-SDL_Texture* Renderer::m_RenderedTexture;
 SDL_Renderer* Renderer::m_Renderer;
 
 
@@ -15,11 +11,7 @@ void Renderer::Init(SDL_Window* window)
     m_Renderer = SDL_CreateRenderer(window, -1, 
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    if (m_Renderer == nullptr)
-    {
-        std::cout << "[ERROR WHEN CREATING RENDERER]: " << SDL_GetError() << std::endl;
-    }
-
+    ASSERT(m_Renderer != nullptr, "Failed to initialize window!" << SDL_GetError());
 }
 
 
@@ -53,7 +45,7 @@ void Renderer::SubmitSprite(Sprite sprite)
     srcRect.x = 0;
     srcRect.y = 0;
     srcRect.w = sprite.GetSize().X;
-    srcRect.w = sprite.GetSize().Y;
+    srcRect.h = sprite.GetSize().Y;
 
     SDL_RenderCopy(m_Renderer, sprite.GetTexture(), &srcRect, &dstRect);
 }

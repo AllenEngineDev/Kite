@@ -17,31 +17,3 @@ public:
     virtual std::string GetLayerName() { return "DefaultLayerName"; }
 };
 
-class TestLayer : public Layer
-{
-public:
-    LAYER_NAME(TestLayer)
-
-    void OnAttach()
-    {   
-    }   
-
-    void OnDetach()
-    {
-    }
-
-
-    void OnEvent(const Event& event)
-    {
-    }
-
-    void OnUpdate()
-    {
-
-    }
-
-    void OnRender()
-    {
-
-    }
-};

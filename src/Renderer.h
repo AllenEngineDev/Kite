@@ -21,5 +21,4 @@ public:
     void CleanUp();
 private:
     static SDL_Renderer* m_Renderer;
-    static SDL_Texture* m_RenderedTexture;
 };
