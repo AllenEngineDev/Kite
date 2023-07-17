@@ -59,8 +59,6 @@ void Engine::Run()
         }
 
 
-        m_GuiLayer->SetupGui(); // TODO: Investigate whether this has to run every frame
-
         // OnUpdate - Frame Logic
         m_LayerStack.UpdateLayers();
 
@@ -130,9 +128,15 @@ void Engine::HandleEvents(SDL_Event& event)
     {
         int mouseX = event.button.x;
         int mouseY = event.button.y;
-        int viewportX = (mouseX - m_ViewportRect.X) * (WINDOW_WIDTH / m_ViewportRect.Width);
-        int viewportY = (mouseY - m_ViewportRect.Y) * (WINDOW_HEIGHT / m_ViewportRect.Height);
-        auto viewportPos = Vector2<int>(viewportX, viewportY);
+        float viewportX = (float)(mouseX - m_ViewportRect.X) * ((float)WINDOW_WIDTH / (float)m_ViewportRect.Width);
+        float viewportY = (float)(mouseY - m_ViewportRect.Y) * ((float)WINDOW_HEIGHT / (float)m_ViewportRect.Height);
+
+        // TODO: This is rather hacky, so either make this a const number that has a meaning or
+        // figure out how to do better remapping - Low priority
+        // Info: It seems that 0.68 is the magic number at which the remap becomes accurate 
+        auto pp = Vector2<float>(viewportX * 0.68, viewportY* 0.68);
+
+        auto viewportPos = Vector2<int>(pp.X, pp.Y);
         auto realPos = Vector2<int>(mouseX, mouseY);
         EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
         break;

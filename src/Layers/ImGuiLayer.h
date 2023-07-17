@@ -4,6 +4,7 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 
+
 #include "Renderer.h"
 #include "Layers/Layer.h"
 #include "Rect.h"
@@ -14,9 +15,34 @@
 
 struct GUIData
 {
-    Entity* SelectedEntity = nullptr;
     std::vector<std::string> ConsoleOutputs;
+    struct EntityComponents
+    {
+        std::shared_ptr<TransformComponent> Transform;
+        std::shared_ptr<SpriteComponent> Sprite;
+    };
+
+    EntityComponents Components;
+
+    // Use this to select entity so we can cache the components inside it
+    void SetSelectedEntity(Entity* entity)
+    {
+        m_SelectedEntity = entity;
+        // SetSelectedEntity(nullptr) is valid (this conveys that no entity is selected)
+        // We don't want to run GetComponent() on nullptr, so we return
+        if (entity == nullptr)
+            return;
+        Components.Transform = m_SelectedEntity->GetComponent<TransformComponent>();
+        Components.Sprite = m_SelectedEntity->GetComponent<SpriteComponent>();
+    }
+
+    bool IsEntitySelected() const { return m_SelectedEntity != nullptr; }
+private:
+    Entity* m_SelectedEntity = nullptr;
+
+
 };  
+
 
 // TODO: We need to split this into another class for the GameWindow
 class ImGuiLayer : public Layer

@@ -2,6 +2,7 @@
 #include "Events/EventManager.h"
 
 #include "ImGuiLayer.h"
+#include "GUI/TransformComponentGUI.h"
 #include "Components/IDComponent.h"
 
 
@@ -77,39 +78,12 @@ void ImGuiLayer::SetupGui()
     ImGui::Begin("Entity list");
     ImGui::End();
 
-
-    if (m_GUIData.SelectedEntity != nullptr)
+    if (m_GUIData.IsEntitySelected())
     {
         ImGui::Begin("Properties");
-        auto transform = m_GUIData.SelectedEntity->GetComponent<TransformComponent>();
-        auto idComponent = m_GUIData.SelectedEntity->GetComponent<IDComponent>();
-
-        // Position
-        ImGui::Text("Position:");
-        ImGui::SameLine();
-        int position[2] = { transform->GetPosition().X, transform->GetPosition().Y };
-        if (ImGui::DragInt2("##Position", position))
-        {
-            transform->SetPosition({ position[0], position[1] });
-        }
-
-        // Scale
-        ImGui::Text("Scale:");
-        ImGui::SameLine();
-        int scale[2] = { transform->GetScale().X, transform->GetScale().Y };
-        if (ImGui::DragInt2("##Scale", scale))
-        {
-            transform->SetScale({ scale[0], scale[1] });
-        }
-
-        // Rotation
-        ImGui::Text("Rotation:");
-        ImGui::SameLine();
-        float rotation = transform->GetRotationDegrees();
-        if (ImGui::DragFloat("##Rotation", &rotation))
-        {
-            transform->SetRotationDegrees(rotation);
-        }
+        if (m_GUIData.Components.Transform != nullptr)
+            TransformComponentGui transformGui(m_GUIData.Components.Transform);
+     
         ImGui::End();
     }
     else 
@@ -124,14 +98,15 @@ void ImGuiLayer::SetupGui()
 void ImGuiLayer::OnEntitySelected(Event &event)
 {
     const auto& entityEvent = static_cast<const EntitySelectedEvent&>(event);
-    Entity* entity = entityEvent.GetEntity();
-    m_GUIData.SelectedEntity = entity;
+    m_GUIData.SetSelectedEntity(entityEvent.GetEntity());
 }
 
 void ImGuiLayer::OnMousePressed(Event &event)
 {
+    
     const auto& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
+    // auto pp = Vector2<float>(pressedPosition.X * 0.68, pressedPosition.Y * 0.68);
     std::stringstream ss;
     ss << "Mouse Pressed At (" << pressedPosition.X << ", " << pressedPosition.Y << " )";
     m_GUIData.ConsoleOutputs.emplace_back(ss.str());
@@ -141,11 +116,15 @@ void ImGuiLayer::OnMousePressed(Event &event)
     bool pressedInMainViewport = m_ViewportRect.IsPositionInBounds(mouseEvent.GetWindowPressedPosition());
     if (!pressedInMainViewport) 
         event.SetHandled(true);
+    else
+        m_GUIData.SetSelectedEntity(nullptr); // This will be called before EntitySelectedEvent
+    // This is just to ensure in cases where there is no entity selected, this is still nullptr
 }
 
 
 void ImGuiLayer::OnUpdate()
 {
+    SetupGui();
 }
 
 void ImGuiLayer::OnRender()

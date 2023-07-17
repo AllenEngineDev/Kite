@@ -49,11 +49,11 @@ void Entity::Render()
     SDL_RenderCopy(renderer, sprite->GetTexture(), &srcRect, &dstRect);
 
 
-    // TODO: Make user be able to check whether they want debug graphics or not
-    // ----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
-    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    // SDL_RenderDrawRect(renderer, &dstRect);
-    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    //TODO: Make user be able to check whether they want debug graphics or not
+    // /----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &dstRect);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 
 }
@@ -64,27 +64,15 @@ void Entity::Render()
 bool Entity::IsColliding(Vector2<int> posToCheck)
 {
     auto transform = GetComponent<TransformComponent>();
-    Vector2<int> rectPosition = transform->GetPosition();
-    // Multiplying the size of the Transform by the size of the Texture to get the total size of the Entity
-    // Multiply by 1.5 to add some leniency
-    Vector2<int> rectSize = (GetComponent<SpriteComponent>()->GetSize() * transform->GetScale());
+    auto sprite = GetComponent<SpriteComponent>();
 
     Rect rect;
-    rect.X = rectPosition.X;
-    rect.Y = rectPosition.Y;
-    rect.Width = rectSize.X;
-    rect.Height = rectSize.X;
+    rect.X = transform->GetPosition().X;
+    rect.Y = transform->GetPosition().Y;
+    rect.Width = sprite->GetSize().X * transform->GetScale().X;
+    rect.Height = sprite->GetSize().Y * transform->GetScale().Y;
 
-    // // Simple Collision check
-    // bool result = (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
-    //         posToCheck.Y >= rectPosition.Y && posToCheck.Y <= rectPosition.Y + rectSize.Y);
-
-    bool result =  posToCheck.X >= rect.X &&
-                    posToCheck.Y >= rect.Y &&
-                    posToCheck.X < (rect.X + rect.Width) &&
-                    posToCheck.Y < (rect.Y + rect.Height);
-
-    return result;
+    return rect.IsPositionInBounds(posToCheck);
 
 }
 
