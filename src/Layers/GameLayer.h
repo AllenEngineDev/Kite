@@ -18,8 +18,8 @@ public:
     void OnAttach() override;
     void OnDetach() override;
 
-    void OnKeyDown(const Event& event);
-    void OnMousePressed(const Event& event);
+    void OnKeyDown(Event& event);
+    void OnMousePressed(Event& event);
 
     void OnUpdate() override;
     void OnRender() override;

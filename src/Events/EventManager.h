@@ -38,13 +38,18 @@ public:
     // Override this for logging purposes when you want to log an event 
     // Include information about the specific event that happened (eg. key codes)
     // when overriding
-    virtual std::string ToString() const { return "DefaultEventString"; } 
+    virtual std::string ToString() const { return "DefaultEventString"; }
+
+    bool IsHandled() const { return m_Handled; }
+
+    void SetHandled(bool value) { m_Handled = value; } 
 private:
     EventType m_Type;
+    bool m_Handled;
 };
 
  // If you change these two using definitions, make sure to change them in EventManager.cpp too!
-using EventFn = std::function<void(const Event&)>;
+using EventFn = std::function<void(Event&)>;
 using EventFnCallbacks = std::vector<EventFn>;
 
 class KeyDownEvent : public Event
@@ -120,13 +125,21 @@ private:
 class MousePressedEvent : public Event
 {
 public:
-    MousePressedEvent(SDL_MouseButtonEvent* mouseEvent) 
-        : m_MouseEvent(mouseEvent), m_PressedPosition(Vector2<int>(m_MouseEvent->x, m_MouseEvent->y)) { }
+    MousePressedEvent(const Vector2<int>& pressedPosition)
+        : m_PressedPosition(pressedPosition) { } 
+    MousePressedEvent(const Vector2<int>& pressedPosition, 
+        const Vector2<int>& windowPressedPosition)
+        : m_PressedPosition(pressedPosition), m_WindowPressedPosition(windowPressedPosition) { } 
 
     // Returns the position where the mouse was pressed
     Vector2<int> GetPressedPosition() const
     {
         return m_PressedPosition;
+    }
+
+    Vector2<int> GetWindowPressedPosition() const
+    {
+        return m_WindowPressedPosition;
     }
 
     void SetMousePosition(const Vector2<int>& newPos)  
@@ -137,15 +150,16 @@ public:
     std::string ToString() const override 
     {
         std::stringstream ss;
-        ss << "MousePressedEvent: Position: " << m_MouseEvent->x << ", " << m_MouseEvent->y;
+        ss << "MousePressedEvent: Position: " << m_PressedPosition.X
+             << ", " << m_PressedPosition.Y;
         return ss.str();  
     }
 
     EVENT_CLASS_TYPE(MousePressedEvent);
 
 private:
-    SDL_MouseButtonEvent* m_MouseEvent;
     Vector2<int> m_PressedPosition;
+    Vector2<int> m_WindowPressedPosition;
 };
 
 // This is only meant to be used to pass Events along the different layers in the layer stack
@@ -156,11 +170,11 @@ private:
     static std::map<EventType, EventFnCallbacks> m_Callbacks;
 public:
     // Calls all functions attached to this EventType
-    static void EventHappened(const Event& event);
+    static void EventHappened(Event&& event);
 
     // The callback function will be called when EventHappened is called 
     // with this type passed in as an argument
-    static void AddCallback(EventType type, EventFn callback);
+    static void AddCallback(EventType type, EventFn callback, bool pushFront = false);
 
 
     // Only pass in valid Event*'s to this function, it does NOT perform type-checking.

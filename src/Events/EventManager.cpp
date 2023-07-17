@@ -1,13 +1,13 @@
 #include "EventManager.h"
 
 // These are just copied from the EventManager class
-using EventFn = std::function<void(const Event&)>;
+using EventFn = std::function<void(Event&)>;
 using EventFnCallbacks = std::vector<EventFn>;
 
 std::map<EventType, EventFnCallbacks> EventManager::m_Callbacks;
 
 
-void EventManager::EventHappened(const Event& event)
+void EventManager::EventHappened(Event&& event)
 {
     // Getting the event type so we can get the relevant callbacks from m_Callbacks
     EventType type = event.GetType();
@@ -18,13 +18,22 @@ void EventManager::EventHappened(const Event& event)
         // For every EventFn, call it!
         for (const EventFn& callback : m_Callbacks[type])
         {
-            callback(event);
+            if (!event.IsHandled())
+                callback(event);
         }
     }
 }
 
-void EventManager::AddCallback(EventType type, EventFn callback)
+void EventManager::AddCallback(EventType type, EventFn callback, bool pushFront)
 {
+    // Insert to the front of the map if this is the case
+    // This will be the events that will be handled first
+    if (pushFront) 
+    {
+        m_Callbacks[type].insert(m_Callbacks[type].begin(), callback);
+        return;
+    }
+
     m_Callbacks[type].emplace_back(callback);
 }
 

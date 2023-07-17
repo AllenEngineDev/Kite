@@ -10,7 +10,6 @@
 #include <memory>
 #include <iostream>
 
-
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
@@ -124,19 +123,18 @@ void Engine::HandleEvents(SDL_Event& event)
     {
     case SDL_KEYDOWN:
     {
-        KeyDownEvent keyEvent(&event.key);
-        EventManager::EventHappened(keyEvent);
+        EventManager::EventHappened(KeyDownEvent((&event.key)));
         break;
     }
     case SDL_MOUSEBUTTONDOWN:
     {
-        MousePressedEvent mouseEvent(&event.button);
         int mouseX = event.button.x;
         int mouseY = event.button.y;
         int viewportX = (mouseX - m_ViewportRect.X) * (WINDOW_WIDTH / m_ViewportRect.Width);
         int viewportY = (mouseY - m_ViewportRect.Y) * (WINDOW_HEIGHT / m_ViewportRect.Height);
-        mouseEvent.SetMousePosition(Vector2<int>(viewportX, viewportY));
-        EventManager::EventHappened(mouseEvent);
+        auto viewportPos = Vector2<int>(viewportX, viewportY);
+        auto realPos = Vector2<int>(mouseX, mouseY);
+        EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
         break;
     }
     }

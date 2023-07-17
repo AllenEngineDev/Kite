@@ -24,7 +24,7 @@ public:
         m_Position = position;
     }
 
-    void SetRotation(float rotation)
+    void SetRotationDegrees(float rotation)
     {
         m_Rotation = rotation;
     }

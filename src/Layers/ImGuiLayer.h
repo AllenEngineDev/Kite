@@ -6,6 +6,8 @@
 
 #include "Renderer.h"
 #include "Layers/Layer.h"
+#include "Rect.h"
+
 
 #include <vector>
 #include <string>
@@ -34,11 +36,12 @@ public:
     void SetupGui();
 
     // Event Callbacks
-    void OnEntitySelected(const Event& event);
-    void OnMousePressed(const Event& event);
+    void OnEntitySelected(Event& event);
+    void OnMousePressed(Event& event);
 private:
     SDL_Texture* m_GameTexture;
     SDL_Window* m_Window;
     SDL_Renderer* m_Renderer;
     GUIData m_GUIData;
+    Rect m_ViewportRect;
 };

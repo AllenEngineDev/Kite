@@ -61,7 +61,6 @@ void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
 
     // If no entity has been selected
     EventManager::EventHappened(EntitySelectedEvent(nullptr));
-
 }
  
 

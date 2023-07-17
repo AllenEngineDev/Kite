@@ -41,14 +41,14 @@ void GameLayer::OnRender()
 // -------------- EVENT CALLBACKS ------------
 
 // Called when key down is pressed
-void GameLayer::OnKeyDown(const Event& event)
+void GameLayer::OnKeyDown(Event& event)
 {
     const KeyDownEvent& keyEvent = static_cast<const KeyDownEvent&>(event);
     game.OnKeyDown(keyEvent);
 }
 
 // Called when the mouse button is down
-void GameLayer::OnMousePressed(const Event& event)
+void GameLayer::OnMousePressed(Event& event)
 {
     const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();

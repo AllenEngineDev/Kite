@@ -5,11 +5,10 @@
 #include "Vector.h"
 #include "Component.h"
 
-// TODO: Rename this to SpriteComponent
-class Sprite : public Component
+class SpriteComponent : public Component
 {
 public:
-    Sprite(const char* filepath);
+    SpriteComponent(const char* filepath);
 
     SDL_Texture* GetTexture() const { return m_Texture; }
     Vector2<int> GetSize() const { return m_Size; }

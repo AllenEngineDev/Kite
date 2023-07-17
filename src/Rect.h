@@ -30,4 +30,19 @@ struct Rect {
         Width = bottomRight.x - topLeft.x;
         Height = bottomRight.y - topLeft.y;
     }
+
+    void Recalculate(const ImVec2& topLeft, const ImVec2& bottomRight)
+    {
+        X = topLeft.x;
+        Y = topLeft.y;
+        Width = bottomRight.x - topLeft.x;
+        Height = bottomRight.y - topLeft.y;
+    }
+
+    bool IsPositionInBounds(const Vector2<int>& position) const
+    {
+        int right = X + Width;
+        int bottom = Y + Height;
+        return (position.X >= X && position.X <= right && position.Y >= Y && position.Y <= bottom);
+    }
 };

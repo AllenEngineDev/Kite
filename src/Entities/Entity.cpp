@@ -5,6 +5,7 @@
 #include "Engine.h"
 
 #include <iostream>
+#include "Rect.h"
 
 Entity::Entity()
 {
@@ -25,7 +26,7 @@ void Entity::Render()
 {
     SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     // Getting the Sprite Component
-    auto sprite = GetComponent<Sprite>();
+    auto sprite = GetComponent<SpriteComponent>();
     if (sprite ==  nullptr)
         return;
 
@@ -50,27 +51,39 @@ void Entity::Render()
 
     // TODO: Make user be able to check whether they want debug graphics or not
     // ----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawRect(renderer, &dstRect);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // SDL_RenderDrawRect(renderer, &dstRect);
+    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 
 }
 
 // Returns true if the position passed in is within the bounds of the Sprite component added to this Entity
 // That means this function will return false if there is not a Sprite
-// TODO: Make an implementation that doesn't rely on the presence of a sprite component
+// TODO: Make an implementation that doesn't rely on the presence of a Sprite Component
 bool Entity::IsColliding(Vector2<int> posToCheck)
 {
     auto transform = GetComponent<TransformComponent>();
-
     Vector2<int> rectPosition = transform->GetPosition();
     // Multiplying the size of the Transform by the size of the Texture to get the total size of the Entity
-    Vector2<int> rectSize = transform->GetScale() * GetComponent<Sprite>()->GetSize();
+    // Multiply by 1.5 to add some leniency
+    Vector2<int> rectSize = (GetComponent<SpriteComponent>()->GetSize() * transform->GetScale());
 
-    // Simple Collision check
-    bool result = (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
-            posToCheck.Y >= rectPosition.Y && posToCheck.Y <= rectPosition.Y + rectSize.Y);
+    Rect rect;
+    rect.X = rectPosition.X;
+    rect.Y = rectPosition.Y;
+    rect.Width = rectSize.X;
+    rect.Height = rectSize.X;
+
+    // // Simple Collision check
+    // bool result = (posToCheck.X >= rectPosition.X && posToCheck.X <= rectPosition.X + rectSize.X &&
+    //         posToCheck.Y >= rectPosition.Y && posToCheck.Y <= rectPosition.Y + rectSize.Y);
+
+    bool result =  posToCheck.X >= rect.X &&
+                    posToCheck.Y >= rect.Y &&
+                    posToCheck.X < (rect.X + rect.Width) &&
+                    posToCheck.Y < (rect.Y + rect.Height);
+
     return result;
 
 }

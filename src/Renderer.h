@@ -15,7 +15,7 @@ public:
 
     void Clear();
     void Submit(SDL_Texture* texture);
-    void SubmitSprite(Sprite sprite);
+    void SubmitSprite(SpriteComponent sprite);
     void SubmitEntity(Entity* entity);
     void Display();
     void CleanUp();

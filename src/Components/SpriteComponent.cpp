@@ -1,18 +1,17 @@
+#include "Core.h"
 #include "Components/SpriteComponent.h"
 #include "Engine.h"
 #include <filesystem>
 #include <string>
 
-Sprite::Sprite(const char* filepath)
+SpriteComponent::SpriteComponent(const char* filepath)
 {
     SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
-    if (m_Texture == nullptr)
-    {
-        std::cout << "[ERROR WHEN GETTING TEXTURE]: " 
-            <<  SDL_GetError() << " [FILEPATH: " << filepath << " ]" << std::endl;
-    }
+    ASSERT(m_Texture != nullptr, "[ERROR WHEN GETTING TEXTURE]: " 
+            <<  SDL_GetError() << " [FILEPATH: " << filepath << " ]");
+    
 
     int width = 0;
     int height = 0;
@@ -22,15 +21,15 @@ Sprite::Sprite(const char* filepath)
     m_Size.Y = height;
 }
 
-// Multiplies the size of the Sprite by another Vectors
-void Sprite::SetSize(Vector2<int> newSize)
+// Multiplies the size of the SpriteComponent by another Vectors
+void SpriteComponent::SetSize(Vector2<int> newSize)
 {
     m_Size.X = newSize.X;
     m_Size.Y = newSize.Y;
 }
 
-// Multiplies the size of the Sprite by a scalar
-void Sprite::SetSize(int scalar)
+// Multiplies the size of the SpriteComponent by a scalar
+void SpriteComponent::SetSize(int scalar)
 {
     m_Size.X = m_Size.X * scalar;
     m_Size.Y = m_Size.Y * scalar;

@@ -4,6 +4,7 @@
 #include "ImGuiLayer.h"
 #include "Components/IDComponent.h"
 
+
 #include <string>
 #include <functional>
 #include <sstream>
@@ -39,11 +40,11 @@ void ImGuiLayer::OnAttach()
 
     // Setting up Event callbacks
     EventManager::AddCallback(EventType::EntitySelectedEvent, 
-        std::bind(&ImGuiLayer::OnEntitySelected, this, std::placeholders::_1));
+        std::bind(&ImGuiLayer::OnEntitySelected, this, std::placeholders::_1), true);
 
     // Debug Event Callbacks
     EventManager::AddCallback(EventType::MousePressedEvent, 
-        std::bind(&ImGuiLayer::OnMousePressed, this, std::placeholders::_1));
+        std::bind(&ImGuiLayer::OnMousePressed, this, std::placeholders::_1), true);
 }
 
 
@@ -61,14 +62,14 @@ void ImGuiLayer::SetupGui()
     vMax.x += ImGui::GetWindowPos().x;
     vMax.y += ImGui::GetWindowPos().y;
 
-    Rect viewportRect(vMin, vMax);
-    EventManager::EventHappened(GuiViewportChange(viewportRect));
+    m_ViewportRect.Recalculate(vMin, vMax);
+    EventManager::EventHappened(GuiViewportChange(m_ViewportRect));
 
     ImGui::End();
 
     ImGui::Begin("Console");
-    ImGui::Text("Rect Position: (%.2f, %.2f)", viewportRect.X, viewportRect.Y);
-    ImGui::Text("Rect Size: (%.2f, %.2f)", viewportRect.Width, viewportRect.Height);
+    ImGui::Text("Rect Position: (%.2f, %.2f)", m_ViewportRect.X, m_ViewportRect.Y);
+    ImGui::Text("Rect Size: (%.2f, %.2f)", m_ViewportRect.Width, m_ViewportRect.Height);
     for (std::string& output : m_GUIData.ConsoleOutputs)
         ImGui::Text(output.c_str());
     ImGui::End();
@@ -86,23 +87,30 @@ void ImGuiLayer::SetupGui()
         // Position
         ImGui::Text("Position:");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d, %d",
-            transform->GetPosition().X,
-            transform->GetPosition().Y);
+        int position[2] = { transform->GetPosition().X, transform->GetPosition().Y };
+        if (ImGui::DragInt2("##Position", position))
+        {
+            transform->SetPosition({ position[0], position[1] });
+        }
 
         // Scale
         ImGui::Text("Scale:");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 1, 1, 1), "%d, %d",
-            transform->GetScale().X,
-            transform->GetScale().Y);
+        int scale[2] = { transform->GetScale().X, transform->GetScale().Y };
+        if (ImGui::DragInt2("##Scale", scale))
+        {
+            transform->SetScale({ scale[0], scale[1] });
+        }
 
         // Rotation
         ImGui::Text("Rotation:");
         ImGui::SameLine();
-        ImGui::TextColored(ImVec4(1, 1, 1, 1), "%.2f", transform->GetRotationDegrees());
+        float rotation = transform->GetRotationDegrees();
+        if (ImGui::DragFloat("##Rotation", &rotation))
+        {
+            transform->SetRotationDegrees(rotation);
+        }
         ImGui::End();
-
     }
     else 
     {
@@ -110,25 +118,29 @@ void ImGuiLayer::SetupGui()
         ImGui::Text("No entity selected");
         ImGui::End();
     }
-
-
 }
 
 
-void ImGuiLayer::OnEntitySelected(const Event &event)
+void ImGuiLayer::OnEntitySelected(Event &event)
 {
     const auto& entityEvent = static_cast<const EntitySelectedEvent&>(event);
     Entity* entity = entityEvent.GetEntity();
     m_GUIData.SelectedEntity = entity;
 }
 
-void ImGuiLayer::OnMousePressed(const Event &event)
+void ImGuiLayer::OnMousePressed(Event &event)
 {
     const auto& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
     std::stringstream ss;
     ss << "Mouse Pressed At (" << pressedPosition.X << ", " << pressedPosition.Y << " )";
     m_GUIData.ConsoleOutputs.emplace_back(ss.str());
+    
+    // Checks if the mouse press was in the game viewport
+    // If it was, we don't need to set it handled because the press should be given to the game layer
+    bool pressedInMainViewport = m_ViewportRect.IsPositionInBounds(mouseEvent.GetWindowPressedPosition());
+    if (!pressedInMainViewport) 
+        event.SetHandled(true);
 }
 
 

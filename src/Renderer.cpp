@@ -37,7 +37,7 @@ void Renderer::Submit(SDL_Texture* texture)
     SDL_RenderCopy(m_Renderer, texture, &srcRect, &destRect);
 }
 
-void Renderer::SubmitSprite(Sprite sprite)
+void Renderer::SubmitSprite(SpriteComponent sprite)
 {
     SDL_Rect dstRect { 300, 300, sprite.GetSize().X, sprite.GetSize().Y }; 
     SDL_Rect srcRect;
