@@ -72,6 +72,9 @@ bool Entity::IsColliding(Vector2<int> posToCheck)
     rect.Width = sprite->GetSize().X * transform->GetScale().X;
     rect.Height = sprite->GetSize().Y * transform->GetScale().Y;
 
+    rect.Width = rect.Width;
+    rect.Height = rect.Height;
+
     return rect.IsPositionInBounds(posToCheck);
 
 }

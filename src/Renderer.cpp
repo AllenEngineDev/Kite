@@ -6,12 +6,12 @@ SDL_Renderer* Renderer::m_Renderer;
 
 
 // Initializes the renderer. Must be called before any other Renderer functions
-void Renderer::Init(SDL_Window* window)
+bool Renderer::Init(SDL_Window* window)
 {
     m_Renderer = SDL_CreateRenderer(window, -1, 
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    ASSERT(m_Renderer != nullptr, "Failed to initialize window!" << SDL_GetError());
+    return m_Renderer != nullptr;
 }
 
 
@@ -51,6 +51,7 @@ void Renderer::SubmitSprite(SpriteComponent sprite)
 }
 
 // To render an entity, it must have atleast a TransformComponent and a SpriteComponent
+// TODO: Instead of entities handling the rendering, it would be smarter to have the Renderer handle the rendering for the entities
 void Renderer::SubmitEntity(Entity* entity)
 {
     entity->Render();

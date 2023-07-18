@@ -30,7 +30,7 @@ public:
         return component;
     }
 
-    // Returns the component if found. Nullptr is returned if not found
+    // Returns the component if found. nullptr is returned if not found
     template<typename T>
     std::shared_ptr<T> GetComponent()
     {

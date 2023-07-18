@@ -1,21 +1,26 @@
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 
-
 #include "Renderer.h"
 #include "Layers/Layer.h"
+
 #include "Rect.h"
 
+#include "GUI/MainViewportGUI.h"
+#include "GUI/ConsoleGUI.h"
+#include "GUI/EntityListGUI.h"
+#include "GUI/PropertiesGUI.h"
 
-#include <vector>
-#include <string>
+
 
 struct GUIData
 {
-    std::vector<std::string> ConsoleOutputs;
     struct EntityComponents
     {
         std::shared_ptr<TransformComponent> Transform;
@@ -65,6 +70,11 @@ public:
     void OnEntitySelected(Event& event);
     void OnMousePressed(Event& event);
 private:
+    MainViewportGUI m_MainViewport;
+    ConsoleGUI m_ConsoleGUI;
+    EntityListGUI m_EntityListGUI;
+    PropertiesGUI m_PropertiesGUI;
+
     SDL_Texture* m_GameTexture;
     SDL_Window* m_Window;
     SDL_Renderer* m_Renderer;

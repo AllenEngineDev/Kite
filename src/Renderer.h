@@ -11,7 +11,7 @@ class Renderer
 public:
     SDL_Renderer* GetSDLRenderer() { return m_Renderer; };
 
-    void Init(SDL_Window* window);
+    bool Init(SDL_Window* window);
 
     void Clear();
     void Submit(SDL_Texture* texture);

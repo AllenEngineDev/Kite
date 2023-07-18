@@ -13,19 +13,28 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
-SDL_Window* Engine::m_Window;
 Renderer Engine::m_Renderer;
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
 {
-    InitWindow("Kite Engine", WINDOW_WIDTH, WINDOW_HEIGHT);
-    InitRenderer();
+    // Initializing Window
+    m_Window.SetSize(Vector2<int>(800, 600));
+    m_Window.SetMinimumSize(Vector2<int>(400, 300));
+    m_Window.SetTitle("Game Engine");
+    m_Window.SetWindowFlags((SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN));
+    bool windowInit = m_Window.Init();
+    ASSERT(windowInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE WINDOW]: " << SDL_GetError());
 
+    // Initialiing Renderer
+    bool rendererInit = m_Renderer.Init(m_Window.GetSDLWindow());
+    ASSERT(rendererInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
+
+    // Adding layers
     GameLayer* gameLayer = new GameLayer;
     m_LayerStack.AttachLayer(gameLayer);
 
-    m_GuiLayer = new ImGuiLayer(m_Window, m_Renderer.GetSDLRenderer());
+    m_GuiLayer = new ImGuiLayer(m_Window.GetSDLWindow(), m_Renderer.GetSDLRenderer());
     m_LayerStack.AttachLayer(m_GuiLayer);
     
     m_Running = true;
@@ -66,39 +75,16 @@ void Engine::Run()
         // Clearing the renderer
         m_Renderer.Clear();
         
-        // Rendering everything!
+        // Copying the render data from all the layers in the layer stack to the renderer
         m_LayerStack.RenderLayers();
 
+        // Rendering everything!
         m_Renderer.Display();
 
     }
 }
 
 
-
-// Initializes SDL window. The window can be accessed publicly using Engine::GetWindow()
-void Engine::InitWindow(const char* title, unsigned int width, unsigned int height)
-{
-    SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
-        SDL_WINDOW_OPENGL
-        | SDL_WINDOW_RESIZABLE
-        | SDL_WINDOW_ALLOW_HIGHDPI
-        );
-
-    m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-        width, height, windowFlags);
-
-    SDL_SetWindowMinimumSize(m_Window, 500, 300);
-
-    ASSERT(m_Window != nullptr, "Failed to initialize window!" << SDL_GetError());
-}
-
-
-// Initializes SDL Renderer. The renderer can be accessed publicly using Engine::GetRenderer()
-void Engine::InitRenderer()
-{   
-    m_Renderer.Init(m_Window);
-}
 
 // ---------- EVENT CALLBACKS ---------
 void Engine::OnGuiViewportChange(const Event& event)
@@ -119,28 +105,30 @@ void Engine::HandleEvents(SDL_Event& event)
 {
     switch (event.type)
     {
-    case SDL_KEYDOWN:
-    {
-        EventManager::EventHappened(KeyDownEvent((&event.key)));
-        break;
-    }
-    case SDL_MOUSEBUTTONDOWN:
-    {
-        int mouseX = event.button.x;
-        int mouseY = event.button.y;
-        float viewportX = (float)(mouseX - m_ViewportRect.X) * ((float)WINDOW_WIDTH / (float)m_ViewportRect.Width);
-        float viewportY = (float)(mouseY - m_ViewportRect.Y) * ((float)WINDOW_HEIGHT / (float)m_ViewportRect.Height);
+        case SDL_KEYDOWN:
+        {
+            EventManager::EventHappened(KeyDownEvent((&event.key)));
+            break;
+        }
+        case SDL_MOUSEBUTTONDOWN:
+        {
+            int mouseX = event.button.x;
+            int mouseY = event.button.y;
 
-        // TODO: This is rather hacky, so either make this a const number that has a meaning or
-        // figure out how to do better remapping - Low priority
-        // Info: It seems that 0.68 is the magic number at which the remap becomes accurate 
-        auto pp = Vector2<float>(viewportX * 0.68, viewportY* 0.68);
+            // Remapping the actual mouse coordinates to the coordinates of the Main Viewport window (which shows the game in the engine)
+            float viewportX = (float)(mouseX - m_ViewportRect.X) * ((float)WINDOW_WIDTH / (float)m_ViewportRect.Width);
+            float viewportY = (float)(mouseY - m_ViewportRect.Y) * ((float)WINDOW_HEIGHT / (float)m_ViewportRect.Height);
 
-        auto viewportPos = Vector2<int>(pp.X, pp.Y);
-        auto realPos = Vector2<int>(mouseX, mouseY);
-        EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
-        break;
-    }
+            // Info: It seems that 0.9 and 0.7 are the magic numbers at which remapping becomes accurate on my PC
+            // TODO: FIX THIS -> maybe this has something to do with aspect ratio of the ImGUI window not being 
+            // same as aspect ratio of OS window.
+            auto pp = Vector2<float>(viewportX * 0.9, viewportY * 0.7);
+
+            auto viewportPos = Vector2<int>(pp.X, pp.Y);
+            auto realPos = Vector2<int>(mouseX, mouseY);
+            EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
+            break;
+        }
     }
 }
 
@@ -148,7 +136,7 @@ void Engine::HandleEvents(SDL_Event& event)
 // Cleans up all resources. Usually called after Engine::Run()
 void Engine::CleanUp()
 {
-    SDL_DestroyWindow(m_Window);
+    m_Window.CleanUp();
     m_Renderer.CleanUp();
     SDL_Quit();
     IMG_Quit();
