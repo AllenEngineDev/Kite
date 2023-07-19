@@ -25,7 +25,8 @@ enum class EventType
     // Events that pass across the layers
     // TODO: Seperate these events that pass across the layers into its own enum class
     EntitySelectedEvent,
-    GuiViewportChange
+    GuiViewportChange,
+    PlayButtonPressedEvent
 };
 
 // Base class for all events
@@ -120,6 +121,19 @@ public:
 
 private:
     Rect m_Rect;
+};
+
+class PlayButtonPressedEvent : public Event
+{
+public:
+    PlayButtonPressedEvent() { };
+    std::string ToString() const override
+    {
+        return "Play button was pressed!";
+    }
+
+    EVENT_CLASS_TYPE(PlayButtonPressedEvent)
+
 };
 
 class MousePressedEvent : public Event

@@ -5,6 +5,7 @@
 
 // TODO: This is not portable. 
 // Consider using a cross-platform logging library, such as spdlog or glog.
+// TODO: Move this to another file
 class Console
 {
 public:

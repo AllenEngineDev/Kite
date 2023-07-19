@@ -10,6 +10,8 @@
 #include "Rect.h"
 #include "Vector.h"
 
+#include "Runtime.h"
+
 class Engine
 {
 public:
@@ -23,8 +25,11 @@ public:
     
     // Event Callbacks
     void OnGuiViewportChange(const Event& event);
+    void OnPlayButtonPressed(const Event& event);
 
 private:
+    Runtime m_Runtime;
+
     Window m_Window;
     static Renderer m_Renderer;
 

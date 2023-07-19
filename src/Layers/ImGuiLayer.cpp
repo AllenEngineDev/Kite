@@ -1,11 +1,14 @@
+#include <string>
+#include <functional>
+#include <sstream>
+
+#include <imgui_internal.h>
+
 #include "Events/EventManager.h"
 
 #include "ImGuiLayer.h"
 #include "GUI/TransformComponentGUI.h"
-
-#include <string>
-#include <functional>
-#include <sstream>
+    
 
 // Called when the ImGUI Layer is attached to the Engine Layer Stack
 // Contains initialization code as well as setting up EventCallbacks
@@ -54,15 +57,41 @@ void ImGuiLayer::OnAttach()
 
 void ImGuiLayer::SetupGui()
 {
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),
-         ImGuiDockNodeFlags_PassthruCentralNode);
-
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_NoTabBar);
     // Main Viewport
     m_MainViewport.Begin();
     // Calculating the viewport rect so that the Renderer knows where to render
     m_ViewportRect = m_MainViewport.CalculateViewportRect();
     m_MainViewport.End();
     EventManager::EventHappened(GuiViewportChange(m_ViewportRect));
+
+    // Play bar
+    ImGui::Begin("Play!");
+    // Get the window size
+    ImVec2 windowSize = ImGui::GetWindowSize();
+
+    // Get the size of the button
+    ImVec2 buttonSize(75, 25); // Adjust the size according to your preference
+
+    // Calculate the position to center the button
+    ImVec2 buttonPosition(
+        (windowSize.x - buttonSize.x) * 0.5f,
+        (windowSize.y - buttonSize.y) * 0.5f
+    );
+
+    // Set the cursor position to center the button
+    ImGui::SetCursorPos(buttonPosition);
+
+    // Create the centered button
+    if (ImGui::Button("Play", buttonSize)) 
+    {
+        // Handle button click event
+        // Add your action here
+        m_ConsoleGUI.AddOutput("Play button pressed!");
+        EventManager::EventHappened(PlayButtonPressedEvent());
+    }
+
+    ImGui::End();
 
     // Console GUI
     m_ConsoleGUI.Begin();
@@ -98,9 +127,6 @@ void ImGuiLayer::OnMousePressed(Event &event)
     
     const auto& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
-    std::stringstream ss;
-    ss << "Mouse Pressed At (" << pressedPosition.X << ", " << pressedPosition.Y << " )";
-    m_ConsoleGUI.AddOutput(ss.str());
 
     // Checks if the mouse press was in the game viewport
     // If it was, we don't need to set it handled because the press should be given to the game layer

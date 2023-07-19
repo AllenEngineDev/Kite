@@ -47,11 +47,11 @@ void Entity::Render()
     SDL_RenderCopy(renderer, sprite->GetTexture(), &srcRect, &dstRect);
 
 
-    //TODO: Make user be able to check whether they want debug graphics or not
-    // /----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawRect(renderer, &dstRect);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // TODO: Make user be able to check whether they want debug graphics or not
+    // ----------- DEBUG GRAPHICS FOR SPRITE BOUNDING BOX -----------
+    // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    // SDL_RenderDrawRect(renderer, &dstRect);
+    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 
 }

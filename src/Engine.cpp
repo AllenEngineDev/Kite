@@ -20,12 +20,16 @@ Rect Engine::m_ViewportRect;
 bool Engine::Init()
 {
     // Initializing Window
-    m_Window.SetSize(Vector2<int>(800, 600));
+    m_Window = Window(Vector2<int>(800, 600), "Game Engine");
     m_Window.SetMinimumSize(Vector2<int>(400, 300));
-    m_Window.SetTitle("Game Engine");
     m_Window.SetWindowFlags((SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN));
     bool windowInit = m_Window.Init();
     ASSERT(windowInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE WINDOW]: " << SDL_GetError());
+
+    // Initializing game runtime to a few base variables
+    // This does not start the runtime. 
+    m_Runtime = Runtime(Vector2<int>(600, 400), "Game Runtime", 
+        (SDL_WindowFlags)SDL_WINDOW_SHOWN);
 
     // Initialiing Renderer
     bool rendererInit = m_Renderer.Init(m_Window.GetSDLWindow());
@@ -43,6 +47,9 @@ bool Engine::Init()
     // Setting up event callbacks
     EventManager::AddCallback(EventType::GuiViewportChange, 
         std::bind(&Engine::OnGuiViewportChange, this, std::placeholders::_1));
+    
+    EventManager::AddCallback(EventType::PlayButtonPressedEvent,
+        std::bind(&Engine::OnPlayButtonPressed, this, std::placeholders::_1));
 
     return true;
 }
@@ -60,12 +67,26 @@ void Engine::Run()
         while (SDL_PollEvent(&event))
         {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (event.type == SDL_QUIT)
+            bool isEventForEngine = (SDL_GetWindowFromID(event.window.windowID) == m_Window.GetSDLWindow());
+
+            // If event happened while the engine was in focus
+            if (isEventForEngine)
             {
-               m_Running = false; 
-               break;
-            } 
-            else { HandleEvents(event); }
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+                {
+                    m_Running = false;
+                    break;
+            }
+                else { HandleEvents(event); }
+            }
+            // If event was for the runtime
+            else 
+            {
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+                {
+                    m_Runtime.Stop();
+                }
+            }   
         }
 
 
@@ -86,7 +107,6 @@ void Engine::Run()
 }
 
 
-
 // ---------- EVENT CALLBACKS ---------
 void Engine::OnGuiViewportChange(const Event& event)
 {
@@ -100,6 +120,17 @@ void Engine::OnGuiViewportChange(const Event& event)
     viewport.h = m_ViewportRect.Height;
     SDL_RenderSetViewport(m_Renderer.GetSDLRenderer(), &viewport);
 }
+
+
+void Engine::OnPlayButtonPressed(const Event& event)
+{
+    std::cout << "Play button has been pressed!" << std::endl;
+    if (m_Runtime.IsRunning())
+        m_Runtime.Stop();
+
+    m_Runtime.Start();
+}
+
 
 // This handles SDL_Events and sends out the relevant EventHappened signals
 void Engine::HandleEvents(SDL_Event& event)
