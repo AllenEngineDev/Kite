@@ -3,8 +3,6 @@
 #include "Components/IDComponent.h"
 #include "Components/TransformComponent.h"
 #include "Engine.h"
-
-#include <iostream>
 #include "Rect.h"
 
 Entity::Entity()

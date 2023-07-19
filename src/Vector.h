@@ -34,6 +34,12 @@ struct Vector2
         return Vector2 { X + other.X, Y + other.Y };
     }
 
+    Vector2 operator-(const Vector2<T>& other) const 
+    {
+        return Vector2 { X - other.X, Y - other.Y };
+    }
+
+
 
     // For usage like Vector2<int> size = { 5, 5 }; size = size *  4
     // This makes sure Vector2s can be multiplied by scalar quantities. This scalar quantity must be of type T

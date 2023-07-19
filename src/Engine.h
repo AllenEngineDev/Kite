@@ -14,13 +14,12 @@ class Engine
 {
 public:
     static Renderer& GetRenderer() { return m_Renderer; }
-    static void AddEntityToWorld(Entity* entity);
+    static Rect& GetViewportRect() { return m_ViewportRect; }
 
     bool Init();
     void Run();  
     void CleanUp();
     void HandleEvents(SDL_Event& event);
-    
     
     // Event Callbacks
     void OnGuiViewportChange(const Event& event);
@@ -30,7 +29,7 @@ private:
     static Renderer m_Renderer;
 
     bool m_Running;
-    Rect m_ViewportRect;
+    static Rect m_ViewportRect;
 
     LayerStack m_LayerStack;
     ImGuiLayer* m_GuiLayer;

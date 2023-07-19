@@ -84,8 +84,13 @@ void ImGuiLayer::OnEntitySelected(Event &event)
 {
     const auto& entityEvent = static_cast<const EntitySelectedEvent&>(event);
     Entity* entity = entityEvent.GetEntity();
-    m_GUIData.SetSelectedEntity(entity);
     m_PropertiesGUI.Components.SetSelectedEntity(entity);
+
+    // TODO: Fix this, we shouldn't have to check if entity is nullptr on an entity selected event
+    // We are doing this in Game.cpp -> CheckForMouseCollisions()
+    // IIRC, we make it possible for entity to be nullptr for the properties window to have a nullptr entity in which case it doesn't have to 
+    // render any properties
+
 }
 
 void ImGuiLayer::OnMousePressed(Event &event)
@@ -93,11 +98,10 @@ void ImGuiLayer::OnMousePressed(Event &event)
     
     const auto& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
-    // auto pp = Vector2<float>(pressedPosition.X * 0.68, pressedPosition.Y * 0.68);
     std::stringstream ss;
     ss << "Mouse Pressed At (" << pressedPosition.X << ", " << pressedPosition.Y << " )";
     m_ConsoleGUI.AddOutput(ss.str());
-    
+
     // Checks if the mouse press was in the game viewport
     // If it was, we don't need to set it handled because the press should be given to the game layer
     bool pressedInMainViewport = m_ViewportRect.IsPositionInBounds(mouseEvent.GetWindowPressedPosition());
@@ -105,7 +109,7 @@ void ImGuiLayer::OnMousePressed(Event &event)
         event.SetHandled(true);
     else
         m_PropertiesGUI.Components.SetSelectedEntity(nullptr);
-        m_GUIData.SetSelectedEntity(nullptr); // This will be called before EntitySelectedEvent
+         // This will be called before EntitySelectedEvent
     // This is just to ensure in cases where there is no entity selected, this is still nullptr
 }
 

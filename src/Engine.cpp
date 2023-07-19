@@ -14,6 +14,7 @@ const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
 Renderer Engine::m_Renderer;
+Rect Engine::m_ViewportRect;
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
@@ -115,17 +116,11 @@ void Engine::HandleEvents(SDL_Event& event)
             int mouseX = event.button.x;
             int mouseY = event.button.y;
 
-            // Remapping the actual mouse coordinates to the coordinates of the Main Viewport window (which shows the game in the engine)
-            float viewportX = (float)(mouseX - m_ViewportRect.X) * ((float)WINDOW_WIDTH / (float)m_ViewportRect.Width);
-            float viewportY = (float)(mouseY - m_ViewportRect.Y) * ((float)WINDOW_HEIGHT / (float)m_ViewportRect.Height);
-
-            // Info: It seems that 0.9 and 0.7 are the magic numbers at which remapping becomes accurate on my PC
-            // TODO: FIX THIS -> maybe this has something to do with aspect ratio of the ImGUI window not being 
-            // same as aspect ratio of OS window.
-            auto pp = Vector2<float>(viewportX * 0.9, viewportY * 0.7);
-
-            auto viewportPos = Vector2<int>(pp.X, pp.Y);
+            // Remapping mouse positions to viewport rect positions
+            // Right now, this is as simple as simple subtraction
+            auto viewportPos = Vector2<int>(mouseX - m_ViewportRect.X, mouseY - m_ViewportRect.Y); 
             auto realPos = Vector2<int>(mouseX, mouseY);
+            
             EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
             break;
         }

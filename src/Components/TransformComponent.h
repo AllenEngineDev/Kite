@@ -14,7 +14,7 @@ public:
     // This will be needed for rendering operation. Make sure every Entity has this component
     TransformComponent(Vector2<int> position, Vector2<int> scale, float rotation)   
         : m_Position(position), m_Scale(scale), m_Rotation(rotation){}
-
+    
     Vector2<int> GetScale() const { return m_Scale; }
     Vector2<int> GetPosition() const { return m_Position; }
     float GetRotationDegrees() const { return m_Rotation; }
