@@ -11,7 +11,7 @@ class Entity
 {
 public:
     Entity(); // For initializing the ID component as all Entities will have this
-    virtual void Render();
+    virtual void Render(SDL_Renderer* renderer);
     void AddComponent(const std::shared_ptr<Component> component);
 
     // Template function to add a component of a specified type with variadic constructor arguments

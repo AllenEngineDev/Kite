@@ -17,7 +17,7 @@ public:
     SDL_Window* GetSDLWindow() { return m_Window; }
     void SetWindowFlags(SDL_WindowFlags flags) { m_WindowFlags = flags; }
     void SetSize(Vector2<int> size) { m_Size = size; }
-    void SetTitle(const char* title) { m_Title = title; }
+    void SetTitle(const char* title) { m_Title =title; }
     void SetMinimumSize(Vector2<int> minSize);  
     void CleanUp() { SDL_DestroyWindow(m_Window); m_Window = nullptr; }
 

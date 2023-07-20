@@ -6,6 +6,12 @@ using EventFnCallbacks = std::vector<EventFn>;
 
 std::map<EventType, EventFnCallbacks> EventManager::m_Callbacks;
 
+EventManager& EventManager::Get()
+{
+    static EventManager instance; // The single instance is created only once
+    return instance;
+}
+
 
 void EventManager::EventHappened(Event&& event)
 {
@@ -35,6 +41,21 @@ void EventManager::AddCallback(EventType type, EventFn callback, bool pushFront)
     }
 
     m_Callbacks[type].emplace_back(callback);
+}
+
+void EventManager::RemoveCallback(EventType type, EventFn callback)
+{
+    if (m_Callbacks.count(type) > 0)
+    {
+        auto& callbacks = m_Callbacks[type];
+        // Got this from ChatGPT -> No idea how it works at all
+        callbacks.erase(std::remove_if(callbacks.begin(), callbacks.end(),
+                                [callback](const EventFn& storedCallback) {
+                                    return storedCallback.target_type() == callback.target_type();
+                                }),
+                callbacks.end());
+
+    }
 }
 
 // To be able to log events to the console

@@ -39,11 +39,11 @@ void ImGuiLayer::OnAttach()
 
 
     // Setting up Event callbacks
-    EventManager::AddCallback(EventType::EntitySelectedEvent, 
+    EventManager::Get().AddCallback(EventType::EntitySelectedEvent, 
         std::bind(&ImGuiLayer::OnEntitySelected, this, std::placeholders::_1), true);
 
     // Debug Event Callbacks
-    EventManager::AddCallback(EventType::MousePressedEvent, 
+    EventManager::Get().AddCallback(EventType::MousePressedEvent, 
         std::bind(&ImGuiLayer::OnMousePressed, this, std::placeholders::_1), true);
 
     // Setting up ImGUI window names
@@ -63,7 +63,7 @@ void ImGuiLayer::SetupGui()
     // Calculating the viewport rect so that the Renderer knows where to render
     m_ViewportRect = m_MainViewport.CalculateViewportRect();
     m_MainViewport.End();
-    EventManager::EventHappened(GuiViewportChange(m_ViewportRect));
+    EventManager::Get().EventHappened(GuiViewportChange(m_ViewportRect));
 
     // Play bar
     ImGui::Begin("Play!");
@@ -88,7 +88,7 @@ void ImGuiLayer::SetupGui()
         // Handle button click event
         // Add your action here
         m_ConsoleGUI.AddOutput("Play button pressed!");
-        EventManager::EventHappened(PlayButtonPressedEvent());
+        EventManager::Get().EventHappened(PlayButtonPressedEvent());
     }
 
     ImGui::End();
@@ -145,7 +145,7 @@ void ImGuiLayer::OnUpdate()
     SetupGui();
 }
 
-void ImGuiLayer::OnRender()
+void ImGuiLayer::OnRender(SDL_Renderer* renderer)
 {
     ImGui::Render();
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
@@ -165,4 +165,10 @@ void ImGuiLayer::OnDetach()
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
+
+    EventManager::Get().RemoveCallback(EventType::EntitySelectedEvent, 
+        std::bind(&ImGuiLayer::OnEntitySelected, this, std::placeholders::_1));
+
+    EventManager::Get().RemoveCallback(EventType::MousePressedEvent, 
+        std::bind(&ImGuiLayer::OnMousePressed, this, std::placeholders::_1));
 }

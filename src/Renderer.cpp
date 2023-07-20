@@ -2,8 +2,6 @@
 #include "Renderer.h"
 
 
-SDL_Renderer* Renderer::m_Renderer;
-
 
 // Initializes the renderer. Must be called before any other Renderer functions
 bool Renderer::Init(SDL_Window* window)
@@ -54,7 +52,7 @@ void Renderer::SubmitSprite(SpriteComponent sprite)
 // TODO: Instead of entities handling the rendering, it would be smarter to have the Renderer handle the rendering for the entities
 void Renderer::SubmitEntity(Entity* entity)
 {
-    entity->Render();
+    entity->Render(m_Renderer);
 }   
 
 

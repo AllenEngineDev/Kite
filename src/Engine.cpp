@@ -13,7 +13,6 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
-Renderer Engine::m_Renderer;
 Rect Engine::m_ViewportRect;
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
@@ -36,7 +35,7 @@ bool Engine::Init()
     ASSERT(rendererInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
 
     // Adding layers
-    GameLayer* gameLayer = new GameLayer;
+    GameLayer* gameLayer = new GameLayer(m_Renderer.GetSDLRenderer());
     m_LayerStack.AttachLayer(gameLayer);
 
     m_GuiLayer = new ImGuiLayer(m_Window.GetSDLWindow(), m_Renderer.GetSDLRenderer());
@@ -45,10 +44,10 @@ bool Engine::Init()
     m_Running = true;
 
     // Setting up event callbacks
-    EventManager::AddCallback(EventType::GuiViewportChange, 
+    EventManager::Get().AddCallback(EventType::GuiViewportChange, 
         std::bind(&Engine::OnGuiViewportChange, this, std::placeholders::_1));
     
-    EventManager::AddCallback(EventType::PlayButtonPressedEvent,
+    EventManager::Get().AddCallback(EventType::PlayButtonPressedEvent,
         std::bind(&Engine::OnPlayButtonPressed, this, std::placeholders::_1));
 
     return true;
@@ -76,18 +75,25 @@ void Engine::Run()
                 {
                     m_Running = false;
                     break;
+                }
+                else 
+                    HandleEvents(event); 
             }
-                else { HandleEvents(event); }
-            }
-            // If event was for the runtime
-            else 
+            else
             {
                 if (event.window.event == SDL_WINDOWEVENT_CLOSE)
                 {
                     m_Runtime.Stop();
+                    SDL_RaiseWindow(m_Window.GetSDLWindow());
+                    break;
                 }
-            }   
+                else
+                    m_Runtime.HandleEvents(event);
+            }
         }
+
+        if (m_Runtime.HasStarted())
+            m_Runtime.Run();
 
 
         // OnUpdate - Frame Logic
@@ -98,7 +104,7 @@ void Engine::Run()
         m_Renderer.Clear();
         
         // Copying the render data from all the layers in the layer stack to the renderer
-        m_LayerStack.RenderLayers();
+        m_LayerStack.RenderLayers(m_Renderer.GetSDLRenderer());
 
         // Rendering everything!
         m_Renderer.Display();
@@ -124,11 +130,14 @@ void Engine::OnGuiViewportChange(const Event& event)
 
 void Engine::OnPlayButtonPressed(const Event& event)
 {
-    std::cout << "Play button has been pressed!" << std::endl;
-    if (m_Runtime.IsRunning())
+    if (m_Runtime.HasStarted())
         m_Runtime.Stop();
 
     m_Runtime.Start();
+    SDL_RaiseWindow(m_Runtime.GetWindow().GetSDLWindow());
+
+    // Running stopped
+    std::cout << "Running has stopped" << std::endl;
 }
 
 
@@ -139,7 +148,7 @@ void Engine::HandleEvents(SDL_Event& event)
     {
         case SDL_KEYDOWN:
         {
-            EventManager::EventHappened(KeyDownEvent((&event.key)));
+            EventManager::Get().EventHappened(KeyDownEvent((&event.key)));
             break;
         }
         case SDL_MOUSEBUTTONDOWN:
@@ -152,7 +161,7 @@ void Engine::HandleEvents(SDL_Event& event)
             auto viewportPos = Vector2<int>(mouseX - m_ViewportRect.X, mouseY - m_ViewportRect.Y); 
             auto realPos = Vector2<int>(mouseX, mouseY);
             
-            EventManager::EventHappened(MousePressedEvent(viewportPos, realPos));
+            EventManager::Get().EventHappened(MousePressedEvent(viewportPos, realPos));
             break;
         }
     }

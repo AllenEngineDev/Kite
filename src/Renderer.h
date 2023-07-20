@@ -9,16 +9,15 @@
 class Renderer
 {
 public:
-    SDL_Renderer* GetSDLRenderer() { return m_Renderer; };
-
     bool Init(SDL_Window* window);
-
     void Clear();
     void Submit(SDL_Texture* texture);
     void SubmitSprite(SpriteComponent sprite);
     void SubmitEntity(Entity* entity);
     void Display();
     void CleanUp();
+
+    SDL_Renderer* GetSDLRenderer() { return m_Renderer; };
 private:
-    static SDL_Renderer* m_Renderer;
+    SDL_Renderer* m_Renderer;
 };

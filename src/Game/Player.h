@@ -9,7 +9,7 @@
 class Player : public Entity
 {
 public:
-    Player(); 
+    Player(SDL_Renderer* renderer); 
     void SetPosition(Vector2<int> position);
     Vector2<int> GetPosition() const { return m_Transform->GetPosition(); }
 private:

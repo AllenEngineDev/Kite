@@ -30,7 +30,7 @@ public:
     void OnAttach();
     void OnDetach();
     void OnUpdate();
-    void OnRender();
+    void OnRender(SDL_Renderer* renderer);
     void StartNewFrame();
     void SetupGui();
 

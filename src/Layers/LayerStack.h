@@ -10,7 +10,7 @@ public:
     void DetachAllLayers();
 
     void UpdateLayers();
-    void RenderLayers();
+    void RenderLayers(SDL_Renderer* renderer);
 private:
     std::vector<Layer*> m_Layers;
 };

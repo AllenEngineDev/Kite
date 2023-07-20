@@ -1,6 +1,9 @@
 #pragma once
 #include "Window.h"
 #include "Renderer.h"
+#include "Game/Game.h"
+
+class Engine;
 
 class Runtime
 {
@@ -14,11 +17,14 @@ public:
     Renderer& GetRenderer() { return m_Renderer; }
 
     void Start();
+    void Run();
     void Stop();
-    bool IsRunning() { return m_IsRunning; }
+    void HandleEvents(SDL_Event event);
+    bool HasStarted() { return m_HasStarted; }
 
 private:
+    Game m_Game;
     Window m_Window;
-    Renderer m_Renderer; 
-    bool m_IsRunning = false;
+    Renderer m_Renderer;
+    bool m_HasStarted = false;
 };

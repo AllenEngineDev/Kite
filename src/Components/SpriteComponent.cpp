@@ -4,9 +4,8 @@
 #include <filesystem>
 #include <string>
 
-SpriteComponent::SpriteComponent(const char* filepath)
+SpriteComponent::SpriteComponent(SDL_Renderer* renderer, const char* filepath)
 {
-    SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
     ASSERT(m_Texture != nullptr, "[ERROR WHEN GETTING TEXTURE]: " 

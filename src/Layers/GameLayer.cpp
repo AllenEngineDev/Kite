@@ -6,7 +6,7 @@
 // Contains initialization code as well as setting up EventCallbacks
 void GameLayer::OnAttach()
 {   
-    game.InitializeGame();
+    game.InitializeGame(m_Renderer);
     // Initializing SDL2
     int sdlInit = SDL_Init(SDL_INIT_VIDEO);
     if (sdlInit != 0)
@@ -18,10 +18,10 @@ void GameLayer::OnAttach()
         std::cout << "imgInit failed! " << SDL_GetError() << std::endl;
 
     // Setting up Event Callbacks
-    EventManager::AddCallback(EventType::KeyDownEvent,  
+    EventManager::Get().AddCallback(EventType::KeyDownEvent,  
         std::bind(&GameLayer::OnKeyDown, this, std::placeholders::_1));
 
-    EventManager::AddCallback(EventType::MousePressedEvent,  
+    EventManager::Get().AddCallback(EventType::MousePressedEvent,  
         std::bind(&GameLayer::OnMousePressed, this, std::placeholders::_1));
 }   
 
@@ -32,9 +32,9 @@ void GameLayer::OnUpdate()
     
 }
 
-void GameLayer::OnRender()
+void GameLayer::OnRender(SDL_Renderer* renderer)
 {
-    game.RenderAllEntities();
+    game.RenderAllEntities(renderer);
 }
 
 
@@ -56,8 +56,13 @@ void GameLayer::OnMousePressed(Event& event)
 }
 
 
-// TODO: Create a remove callback function for the EventManager and remove callbacks here
 void GameLayer::OnDetach() 
 {
     game.CleanupGame();
+    
+    EventManager::Get().RemoveCallback(EventType::KeyDownEvent,
+        std::bind(&GameLayer::OnKeyDown, this, std::placeholders::_1));
+    
+    EventManager::Get().RemoveCallback(EventType::MousePressedEvent,
+        std::bind(&GameLayer::OnMousePressed, this, std::placeholders::_1));
 }

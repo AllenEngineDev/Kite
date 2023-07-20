@@ -1,35 +1,27 @@
-#include "Game/Game.h"
 #include <SDL2/SDL_scancode.h>
 
-void Game::InitializeGame()
+#include "Game/Game.h"
+#include "Components/SpriteComponent.h"
+#include "Components/TransformComponent.h"
+
+void Game::InitializeGame(SDL_Renderer* renderer)
 {
-    m_Player = new Player;
-        
-    m_Player->GetComponent<TransformComponent>()->SetPosition(Vector2<int>(0, 0));
-    AddEntityToWorld(m_Player);
+    Entity* entity = new Entity;
+    entity->AddComponentConstruct<TransformComponent>(
+        Vector2<int>(0, 0), Vector2<int>(5, 5), 0.0f
+    );
+
+    entity->AddComponentConstruct<SpriteComponent>(renderer,
+        "../res/gfx/sprites/eagle/eagle-attack-1.png");
+
+    AddEntityToWorld(entity);
 }
 
-void Game::SetPlayerPosition(Vector2<int> newPos)
-{
-    m_Player->SetPosition(newPos);
-}
 
 // TODO: Make your own Engine specific keycodes rather than using SDL Keycodes
-void Game::OnKeyDown(const KeyDownEvent& keyEvent)
+void Game::OnKeyDown(const Event& keyEvent)
 {
-    SDL_Scancode code = keyEvent.GetKeyCode();
-    Vector2<int> targetVector;
-    switch (code)
-    {
-        case SDL_SCANCODE_A:
-            targetVector = Vector2<int>(-3, 0);
-            break;
-        case SDL_SCANCODE_D:
-            targetVector = Vector2<int>(3, 0);
-            break;
-    }
-
-    m_Player->SetPosition(m_Player->GetPosition() + targetVector);
+    std::cout << "Burger durger" << std::endl;
 }
 
 void Game::OnMousePressed(const MousePressedEvent& mouseEvent)
@@ -42,10 +34,10 @@ void Game::AddEntityToWorld(Entity* entity)
     m_Entities.emplace_back(entity);
 }
 
-void Game::RenderAllEntities()
+void Game::RenderAllEntities(SDL_Renderer* renderer)
 {
     for (Entity* entity : m_Entities)
-        entity->Render();
+        entity->Render(renderer);
 }
 
 void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
@@ -54,13 +46,13 @@ void Game::CheckForMouseCollisions(Vector2<int> mousePosition)
     {
         if (e->IsColliding(mousePosition))
         {
-            EventManager::EventHappened(EntitySelectedEvent(e));
+            EventManager::Get().EventHappened(EntitySelectedEvent(e));
             return;
         }
     }
 
     // If no entity has been selected
-    EventManager::EventHappened(EntitySelectedEvent(nullptr));
+    EventManager::Get().EventHappened(EntitySelectedEvent(nullptr));
 }
  
 

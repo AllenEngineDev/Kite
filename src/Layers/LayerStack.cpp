@@ -39,10 +39,10 @@ void LayerStack::UpdateLayers()
 
 
 // Runs OnRender on all the layers
-void LayerStack::RenderLayers()
+void LayerStack::RenderLayers(SDL_Renderer* renderer)
 {
     for (auto layerIter = m_Layers.rbegin(); layerIter != m_Layers.rend(); ++layerIter)
-        (*layerIter)->OnRender();
+        (*layerIter)->OnRender(renderer);
 }
 
 

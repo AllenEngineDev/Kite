@@ -4,6 +4,7 @@
 #include "Components/TransformComponent.h"
 #include "Engine.h"
 #include "Rect.h"
+#include "Core.h"
 
 Entity::Entity()
 {
@@ -20,9 +21,8 @@ void Entity::AddComponent(const std::shared_ptr<Component> component)
         m_Components.emplace_back(component);
 }
 
-void Entity::Render()
+void Entity::Render(SDL_Renderer* renderer)
 {
-    SDL_Renderer* renderer = Engine::GetRenderer().GetSDLRenderer();
     // Getting the Sprite Component
     auto sprite = GetComponent<SpriteComponent>();
     if (sprite ==  nullptr)
@@ -63,6 +63,10 @@ bool Entity::IsColliding(Vector2<int> posToCheck)
 {
     auto transform = GetComponent<TransformComponent>();
     auto sprite = GetComponent<SpriteComponent>();
+
+    ASSERT(transform != nullptr, "[ASSERTION FAILED]: TRANSFORM COMPONENT COULD NOT BE FOUND");
+    ASSERT(sprite != nullptr, "[ASSERTION FAILED]: SPRITE COMPONENT COULD NOT BE FOUND");
+
 
     Rect rect;
     rect.X = transform->GetPosition().X;

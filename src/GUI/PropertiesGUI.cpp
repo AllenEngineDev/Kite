@@ -5,6 +5,7 @@ void PropertiesGUI::DisplayProperties()
 {
     if (Components.IsEntitySelected())
     {
-        TransformComponentGui transformGui(Components.Transform);
+        if (Components.Transform != nullptr)
+            TransformComponentGui transformGui(Components.Transform);
     }
 }

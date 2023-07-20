@@ -12,10 +12,10 @@
 
 #include "Runtime.h"
 
+
 class Engine
 {
 public:
-    static Renderer& GetRenderer() { return m_Renderer; }
     static Rect& GetViewportRect() { return m_ViewportRect; }
 
     bool Init();
@@ -31,7 +31,7 @@ private:
     Runtime m_Runtime;
 
     Window m_Window;
-    static Renderer m_Renderer;
+    Renderer m_Renderer;
 
     bool m_Running;
     static Rect m_ViewportRect;

@@ -179,10 +179,9 @@ private:
 // This is only meant to be used to pass Events along the different layers in the layer stack
 class EventManager
 {
-private:
-    // TODO: This could be better as an unordered map
-    static std::map<EventType, EventFnCallbacks> m_Callbacks;
 public:
+    // Get the singleton instance
+    static EventManager& Get(); 
     // Calls all functions attached to this EventType
     static void EventHappened(Event&& event);
 
@@ -190,6 +189,8 @@ public:
     // with this type passed in as an argument
     static void AddCallback(EventType type, EventFn callback, bool pushFront = false);
 
+    // Remember to call this after detaching a layer from the layer stack
+    static void RemoveCallback(EventType type, EventFn callback );
 
     // Only pass in valid Event*'s to this function, it does NOT perform type-checking.
     // Returns nullptr if the cast failed.
@@ -198,6 +199,13 @@ public:
     {
         return static_cast<const T*>(event);
     }
+private:
+    // TODO: This could be better as an unordered map
+    static std::map<EventType, EventFnCallbacks> m_Callbacks;
+
+    EventManager() = default; // Private constructor to prevent direct instantiation
+    EventManager(const EventManager&) = delete; // Disable copy constructor
+    EventManager& operator=(const EventManager&) = delete; // Disable assignment operator
 
 };
 

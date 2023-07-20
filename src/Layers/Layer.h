@@ -13,7 +13,7 @@ public:
     virtual void OnAttach() = 0;
     virtual void OnDetach() = 0;
     virtual void OnUpdate() = 0;
-    virtual void OnRender() = 0;    
+    virtual void OnRender(SDL_Renderer* renderer) = 0;    
     virtual std::string GetLayerName() { return "DefaultLayerName"; }
 };
 

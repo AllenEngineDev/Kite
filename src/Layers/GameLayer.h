@@ -11,8 +11,10 @@
 class GameLayer : public Layer
 {
 public:
+    GameLayer(SDL_Renderer* renderer)
+        : m_Renderer(renderer) { }
+
     Game game;
-    LAYER_NAME(GameLayer)
 
     // SDL, SDL_IMG, SDL Renderer, IMGUI Initialization code 
     void OnAttach() override;
@@ -22,8 +24,10 @@ public:
     void OnMousePressed(Event& event);
 
     void OnUpdate() override;
-    void OnRender() override;
+    void OnRender(SDL_Renderer* renderer) override;
+    LAYER_NAME(GameLayer)
 
 private:
     bool m_Running;
+    SDL_Renderer* m_Renderer;
 };
