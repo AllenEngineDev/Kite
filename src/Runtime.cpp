@@ -1,5 +1,6 @@
 #include "Core.h"
 #include "Runtime.h"
+#include "Scene/SceneSerializer.h"
 
 Runtime::Runtime(Vector2<int> windowSize, const char* windowName, SDL_WindowFlags flags)
 {
@@ -14,6 +15,8 @@ void Runtime::Start()
 
     bool rendererSuccess = m_Renderer.Init(m_Window.GetSDLWindow());
     ASSERT(rendererSuccess, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
+
+    Scene* test = SceneSerializer::Get().DeserializeScene("../scenes/scene.ksn");
 
     m_Scene.InitializeScene(m_Renderer.GetSDLRenderer());
 

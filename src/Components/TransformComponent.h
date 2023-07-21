@@ -1,8 +1,10 @@
 #pragma once
 
+#include <sstream>
 #include "Component.h"
 #include "Vector.h"
 
+// TODO: Make a CPP File for this
 class TransformComponent : public Component
 {
 public:
@@ -32,14 +34,30 @@ public:
     void SetScale(Vector2<int> scale)
     {
         m_Scale = scale;
-    }
+    }   
 
+    // TODO: Put this in a CPP file
     void Serialize(YAML::Emitter& out) const override
     {
         out << YAML::BeginMap; 
 
-        out << YAML::Key << "Key1";
-        out << YAML::Value << "Key value";
+        // Position
+        out << YAML::Key << "Position";
+        out << YAML::Value << YAML::BeginSeq;
+        out <<  m_Position.X;
+        out << m_Position.Y;
+        out << YAML::EndSeq;
+
+        // Scale
+        out << YAML::Key << "Scale";
+        out << YAML::Value << YAML::BeginSeq;
+        out << m_Scale.X;
+        out << m_Scale.Y;
+        out << YAML::EndSeq;
+
+        // Rotation 
+        out << YAML::Key << "Rotation";
+        out << YAML::Value << m_Rotation;
 
         out << YAML::EndMap;
     }

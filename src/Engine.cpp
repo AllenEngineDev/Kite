@@ -18,7 +18,7 @@ Rect Engine::m_ViewportRect;
 
 // Initializes SDL and SDL_image as well as initializes the window and the Renderer
 bool Engine::Init()
-{
+{   
     // Initializing Window
     m_Window = Window(Vector2<int>(800, 600), "Game Engine");
     m_Window.SetMinimumSize(Vector2<int>(400, 300));
@@ -86,6 +86,7 @@ void Engine::Run()
                 {
                     m_Runtime.Stop();
                     SDL_RaiseWindow(m_Window.GetSDLWindow());
+                    std::cout << "Runtime stopped" << std::endl;
                     break;
                 }
                 else
@@ -139,8 +140,7 @@ void Engine::OnPlayButtonPressed(const Event& event)
     m_Runtime.Start();
     SDL_RaiseWindow(m_Runtime.GetWindow().GetSDLWindow());
 
-    // Running stopped
-    std::cout << "Running has stopped" << std::endl;
+    std::cout << "Runtime started" << std::endl;
 }
 
 

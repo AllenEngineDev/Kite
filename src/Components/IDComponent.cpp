@@ -14,8 +14,8 @@ void IDComponent::Serialize(YAML::Emitter& out) const
 {
     out << YAML::BeginMap; 
 
-    out << YAML::Key << "Key1";
-    out << YAML::Value << "Key value";
+    out << YAML::Key << "ID";
+    out << YAML::Value << m_ID;
 
     out << YAML::EndMap;
 }

@@ -17,6 +17,5 @@ public:
     }
 
     void SerializeScene(const Scene& scene, const std::string& filepath);
-    // void SerializeComponent(const std::shared_ptr<Component>& component);
-
+    Scene* DeserializeScene(const std::string& filepath);
 };

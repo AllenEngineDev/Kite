@@ -39,8 +39,8 @@ void SpriteComponent::Serialize(YAML::Emitter& out) const
 {
     out << YAML::BeginMap; 
 
-    out << YAML::Key << "Key1";
-    out << YAML::Value << "Key value";
+    out << YAML::Key << "Filepath";
+    out << YAML::Value << m_Filepath;
 
     out << YAML::EndMap;
 }
