@@ -3,14 +3,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "Runtime.h"
 #include "Window.h"
 #include "Renderer.h"
+
 #include "Layers/LayerStack.h"
+#include "Layers/GameLayer.h"
 #include "Layers/ImGuiLayer.h"
+
 #include "Rect.h"
 #include "Vector.h"
 
-#include "Runtime.h"
 
 
 class Engine
@@ -29,6 +32,7 @@ public:
 
 private:
     Runtime m_Runtime;
+    GameLayer* m_GameLayer;
 
     Window m_Window;
     Renderer m_Renderer;

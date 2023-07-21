@@ -34,6 +34,19 @@ public:
         m_Scale = scale;
     }
 
+    void Serialize(YAML::Emitter& out) const override
+    {
+        out << YAML::BeginMap; 
+
+        out << YAML::Key << "Key1";
+        out << YAML::Value << "Key value";
+
+        out << YAML::EndMap;
+    }
+
+
+    COMPONENT_NAME("TransformComponent")
+
 private:
     Vector2<int> m_Position;
     Vector2<int> m_Scale;

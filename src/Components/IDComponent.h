@@ -11,9 +11,12 @@ class IDComponent : public Component
 {
 public:
     IDComponent(Entity* e);
-
     uint64_t GetID() const { return m_ID; }
 
+    void Serialize(YAML::Emitter& out) const override;
+    
+
+    COMPONENT_NAME("IDComponent")
 
 private:
     static std::random_device rd;                   // Obtain a random seed from the hardware

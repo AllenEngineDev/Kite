@@ -1,12 +1,12 @@
 #include "GameLayer.h"
-
 #include <functional>
 
 // Called when the ImGUI Layer is attached to the Engine Layer Stack
 // Contains initialization code as well as setting up EventCallbacks
 void GameLayer::OnAttach()
 {   
-    game.InitializeGame(m_Renderer);
+    m_Scene.InitializeScene(m_Renderer);
+    m_Scene.SetName("Test Scene");
     // Initializing SDL2
     int sdlInit = SDL_Init(SDL_INIT_VIDEO);
     if (sdlInit != 0)
@@ -34,7 +34,7 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender(SDL_Renderer* renderer)
 {
-    game.RenderAllEntities(renderer);
+    m_Scene.RenderAllEntities(renderer);
 }
 
 
@@ -44,7 +44,7 @@ void GameLayer::OnRender(SDL_Renderer* renderer)
 void GameLayer::OnKeyDown(Event& event)
 {
     const KeyDownEvent& keyEvent = static_cast<const KeyDownEvent&>(event);
-    game.OnKeyDown(keyEvent);
+    m_Scene.OnKeyDown(keyEvent);
 }
 
 // Called when the mouse button is down
@@ -52,13 +52,13 @@ void GameLayer::OnMousePressed(Event& event)
 {
     const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
-    game.CheckForMouseCollisions(pressedPosition);
+    m_Scene.CheckForMouseCollisions(pressedPosition);
 }
 
 
 void GameLayer::OnDetach() 
 {
-    game.CleanupGame();
+    m_Scene.CleanupScene();
     
     EventManager::Get().RemoveCallback(EventType::KeyDownEvent,
         std::bind(&GameLayer::OnKeyDown, this, std::placeholders::_1));

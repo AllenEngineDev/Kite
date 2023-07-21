@@ -11,15 +11,14 @@ void Runtime::Start()
 {
     bool initSuccess = m_Window.Init();
     ASSERT(initSuccess, "[ASSERTION FAILED: FAILED TO INITIALIZE RUNTIME WINDOW]: " << SDL_GetError());
-    
 
     bool rendererSuccess = m_Renderer.Init(m_Window.GetSDLWindow());
     ASSERT(rendererSuccess, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
 
-    m_Game.InitializeGame(m_Renderer.GetSDLRenderer());
+    m_Scene.InitializeScene(m_Renderer.GetSDLRenderer());
 
     EventManager::Get().AddCallback(EventType::KeyDownEvent,
-        std::bind(&Game::OnKeyDown, m_Game, std::placeholders::_1));
+        std::bind(&Scene::OnKeyDown, m_Scene, std::placeholders::_1));
 
     m_HasStarted = true;
 }
@@ -27,7 +26,7 @@ void Runtime::Start()
 void Runtime::Run()
 {
     m_Renderer.Clear();
-    m_Game.RenderAllEntities(m_Renderer.GetSDLRenderer());
+    m_Scene.RenderAllEntities(m_Renderer.GetSDLRenderer());
     m_Renderer.Display();
 }
 
@@ -48,4 +47,5 @@ void Runtime::Stop()
     m_HasStarted = false;
     m_Window.CleanUp();
     m_Renderer.CleanUp();
+    m_Scene.CleanupScene();
 }

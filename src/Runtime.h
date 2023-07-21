@@ -1,7 +1,8 @@
 #pragma once
 #include "Window.h"
 #include "Renderer.h"
-#include "Game/Game.h"
+#include "Scene/Scene.h"
+
 
 class Engine;
 
@@ -23,7 +24,7 @@ public:
     bool HasStarted() { return m_HasStarted; }
 
 private:
-    Game m_Game;
+    Scene m_Scene;
     Window m_Window;
     Renderer m_Renderer;
     bool m_HasStarted = false;

@@ -5,6 +5,7 @@
 #include <string>
 
 SpriteComponent::SpriteComponent(SDL_Renderer* renderer, const char* filepath)
+    : m_Filepath(filepath)
 {
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
@@ -32,4 +33,14 @@ void SpriteComponent::SetSize(int scalar)
 {
     m_Size.X = m_Size.X * scalar;
     m_Size.Y = m_Size.Y * scalar;
+}
+
+void SpriteComponent::Serialize(YAML::Emitter& out) const 
+{
+    out << YAML::BeginMap; 
+
+    out << YAML::Key << "Key1";
+    out << YAML::Value << "Key value";
+
+    out << YAML::EndMap;
 }

@@ -1,14 +1,15 @@
+#include <memory>
+#include <iostream>
+
 #include "Engine.h"
 #include "Core.h"
 #include "Entities/Entity.h"
-#include "Game/Game.h"
+#include "Scene/Scene.h"
 #include "Components/TransformComponent.h"
 #include "Events/EventManager.h"
-#include "Layers/GameLayer.h"
 #include "Layers/ImGuiLayer.h"
+#include "Scene/SceneSerializer.h"
 
-#include <memory>
-#include <iostream>
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
@@ -35,8 +36,8 @@ bool Engine::Init()
     ASSERT(rendererInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
 
     // Adding layers
-    GameLayer* gameLayer = new GameLayer(m_Renderer.GetSDLRenderer());
-    m_LayerStack.AttachLayer(gameLayer);
+    m_GameLayer = new GameLayer(m_Renderer.GetSDLRenderer());
+    m_LayerStack.AttachLayer(m_GameLayer);
 
     m_GuiLayer = new ImGuiLayer(m_Window.GetSDLWindow(), m_Renderer.GetSDLRenderer());
     m_LayerStack.AttachLayer(m_GuiLayer);
@@ -130,6 +131,8 @@ void Engine::OnGuiViewportChange(const Event& event)
 
 void Engine::OnPlayButtonPressed(const Event& event)
 {
+    SceneSerializer::Get().SerializeScene(m_GameLayer->GetScene(), "../scenes/scene.ksn");
+    
     if (m_Runtime.HasStarted())
         m_Runtime.Stop();
 

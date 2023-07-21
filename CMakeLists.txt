@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(SDLEngine)
 
-set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui-docking" )
-
+set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui-docking")
+set(YAML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp")
 
 # Find SDL and SDL2_image packages
 find_package(SDL2 REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL/lib/cmake")
 find_package(SDL2_image REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL2Image/lib/cmake")
+
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
@@ -17,7 +18,7 @@ file(GLOB SOURCES CONFIGURE_DEPENDS
     "src/Components/*.cpp"
     "src/Events/*.cpp"
     "src/Entities/*.cpp"
-    "src/Game/*.cpp"
+    "src/Scene/*.cpp"
     "src/Layers/*.cpp"
     "src/GUI/*.cpp"
      )
@@ -40,6 +41,8 @@ target_include_directories(SDLEngine PUBLIC
 target_include_directories(SDLEngine PRIVATE ${SDL2_INCLUDE_DIRS})
 target_include_directories(SDLEngine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL2Image/include")
 
+# Add YAML includes
+target_include_directories(SDLEngine PRIVATE "${YAML_DIR}/include")
 
 
 # Compiling IMGUI into a library
@@ -60,9 +63,11 @@ add_library(imgui
 target_include_directories(SDLEngine PRIVATE  "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
 target_include_directories(SDLEngine PRIVATE "${STB_DIR}")
 
+target_link_directories(SDLEngine PUBLIC ${YAML_DIR}/build)
+
 # Link the SDL, SDL2 image, and IMGUI library
 target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image 
-    imgui)  
+    imgui yaml-cpp)  
 
 
 # Make SDL2 available to Imgui

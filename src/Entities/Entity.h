@@ -49,6 +49,11 @@ public:
     }
 
     bool IsColliding(Vector2<int> posToCheck);
+
+    const std::vector<std::shared_ptr<Component>>& GetComponents() const { return m_Components; }
+
+    virtual std::string GetName() const { return "DefaultEntity"; }
+
 private:
     std::vector<std::shared_ptr<Component>> m_Components; 
 };

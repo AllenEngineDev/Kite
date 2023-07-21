@@ -1,7 +1,8 @@
-#include "imgui.h"
+#include <memory>
+#include <imgui.h>
+
 #include "Components/TransformComponent.h"
 
-#include <memory>
 
 class TransformComponentGui
 {

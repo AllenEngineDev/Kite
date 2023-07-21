@@ -9,3 +9,13 @@ IDComponent::IDComponent(Entity* e)
 {
     IDManager::Get().AddEntityToIDMap(m_ID, e);
 }
+
+void IDComponent::Serialize(YAML::Emitter& out) const 
+{
+    out << YAML::BeginMap; 
+
+    out << YAML::Key << "Key1";
+    out << YAML::Value << "Key value";
+
+    out << YAML::EndMap;
+}

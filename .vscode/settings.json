@@ -80,7 +80,10 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xloctime": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "fstream": "cpp"
     },
     "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\bin\\cpp.exe"
 }

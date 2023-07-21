@@ -1,7 +1,9 @@
 #pragma once
+
 #include "Renderer.h"
 #include "Layers/Layer.h"
-#include "Game/Game.h"
+#include "Scene/Scene.h"
+
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -14,8 +16,6 @@ public:
     GameLayer(SDL_Renderer* renderer)
         : m_Renderer(renderer) { }
 
-    Game game;
-
     // SDL, SDL_IMG, SDL Renderer, IMGUI Initialization code 
     void OnAttach() override;
     void OnDetach() override;
@@ -25,9 +25,12 @@ public:
 
     void OnUpdate() override;
     void OnRender(SDL_Renderer* renderer) override;
+    Scene GetScene() const { return m_Scene; }
     LAYER_NAME(GameLayer)
 
 private:
+    Scene m_Scene;
+
     bool m_Running;
     SDL_Renderer* m_Renderer;
 };

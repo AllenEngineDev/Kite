@@ -1,0 +1,9 @@
+SceneName: Test Scene
+Entities:
+  - DefaultEntity:
+      IDComponent:
+        Key1: Key value
+      TransformComponent:
+        Key1: Key value
+      SpriteComponent:
+        Key1: Key value
