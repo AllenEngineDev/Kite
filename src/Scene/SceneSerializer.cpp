@@ -1,10 +1,14 @@
 #include <yaml-cpp/yaml.h>
+#include <SDL2/SDL.h>
 
 #include "SceneSerializer.h"
 #include "Entities/Entity.h"
-#include "Components/Component.h"
+#include "Components/SpriteComponent.h"
+#include "Components/IDComponent.h"
+#include "Components/TransformComponent.h"
 
 
+// TODO: Use own file format
 void SceneSerializer::SerializeScene(const Scene& scene, const std::string& filepath)
 {
     YAML::Emitter out;
@@ -44,19 +48,23 @@ void SceneSerializer::SerializeScene(const Scene& scene, const std::string& file
     outfile.close();
 }
 
-Scene* SceneSerializer::DeserializeScene(const std::string& filepath)
+Scene* SceneSerializer::DeserializeScene(SDL_Renderer* renderer, const std::string& filepath)
 {
     YAML::Node config = YAML::LoadFile(filepath);
     Scene* scene = new Scene;
 
     YAML::Node entities = config["Entities"];
 
+    // TODO: This is why I want to use my own file format
+    // I HATE THIS 3 LAYER FOR LOOP 
+    // For the sequence of entities
     for (size_t i = 0; i < entities.size(); i++)
     {
+        Entity* entity = new Entity;
+        // For the entity map
         for (YAML::const_iterator it = entities[i].begin(); it != entities[i].end();
             it++)
         {
-            std::cout << "Entity name is " << it->first << std::endl;
             for (YAML::const_iterator it2 = it->second.begin(); it2 != it->second.end();
             it2++)
             {
@@ -67,31 +75,32 @@ Scene* SceneSerializer::DeserializeScene(const std::string& filepath)
                 {
                     uint64_t id = data["ID"].as<uint64_t>();
 
-                    std::cout << "ID IS: " << id << std::endl;
+                    entity->AddComponentConstruct<IDComponent>(id);
                 }
                 else if (componentName == "SpriteComponent")
                 {
                     std::string filepath = data["Filepath"].as<std::string>();
 
-                    std::cout << "FILEPATH IS: " << filepath << std::endl;
+                    entity->AddComponentConstruct<SpriteComponent>(renderer, filepath.c_str());
                 }
                 else if (componentName == "TransformComponent")
                 {
                     int posX = data["Position"][0].as<int>();
                     int posY = data["Position"][1].as<int>();
-
                     int scaleX = data["Scale"][0].as<int>();
                     int scaleY = data["Scale"][1].as<int>();
                     float rotDegrees = data["Rotation"].as<float>();
 
-                    std::cout << "POSITION X: " << posX << std::endl;
-                    std::cout << "POSITION Y: " << posY << std::endl;
-                    std::cout << "SCALE X: " << scaleX << std::endl;
-                    std::cout << "SCALE Y: " << scaleY << std::endl;
-                    std::cout << "ROTATION DEGREES: " << rotDegrees << std::endl;
+                    entity->AddComponentConstruct<TransformComponent>(
+                        Vector2<int>(posX, posY),
+                        Vector2<int>(scaleX, scaleY),
+                        rotDegrees
+                        );
                 }
             }
         }
+
+        scene->AddEntityToWorld(entity);
     }        
 
     return scene;

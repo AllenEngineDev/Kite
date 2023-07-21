@@ -10,6 +10,8 @@ class Entity;
 class IDComponent : public Component
 {
 public:
+    IDComponent(uint64_t id) 
+        : m_ID(id) { }
     IDComponent(Entity* e);
     uint64_t GetID() const { return m_ID; }
 

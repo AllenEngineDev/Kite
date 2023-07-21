@@ -17,5 +17,5 @@ public:
     }
 
     void SerializeScene(const Scene& scene, const std::string& filepath);
-    Scene* DeserializeScene(const std::string& filepath);
+    Scene* DeserializeScene(SDL_Renderer* renderer, const std::string& filepath);
 };

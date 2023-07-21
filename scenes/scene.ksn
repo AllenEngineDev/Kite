@@ -2,14 +2,14 @@ SceneName: Test Scene
 Entities:
   - DefaultEntity:
       IDComponent:
-        ID: 3241515009311992825
+        ID: 13580797945412487819
       TransformComponent:
         Position:
-          - 13
-          - 9
+          - 0
+          - 0
         Scale:
-          - 10
-          - 18
-        Rotation: -15
+          - 5
+          - 5
+        Rotation: 0
       SpriteComponent:
         Filepath: ../res/gfx/sprites/eagle/eagle-attack-1.png

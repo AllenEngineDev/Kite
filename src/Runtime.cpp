@@ -16,9 +16,7 @@ void Runtime::Start()
     bool rendererSuccess = m_Renderer.Init(m_Window.GetSDLWindow());
     ASSERT(rendererSuccess, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
 
-    Scene* test = SceneSerializer::Get().DeserializeScene("../scenes/scene.ksn");
-
-    m_Scene.InitializeScene(m_Renderer.GetSDLRenderer());
+    m_Scene = SceneSerializer::Get().DeserializeScene(m_Renderer.GetSDLRenderer(), "../scenes/scene.ksn");
 
     EventManager::Get().AddCallback(EventType::KeyDownEvent,
         std::bind(&Scene::OnKeyDown, m_Scene, std::placeholders::_1));
@@ -29,7 +27,7 @@ void Runtime::Start()
 void Runtime::Run()
 {
     m_Renderer.Clear();
-    m_Scene.RenderAllEntities(m_Renderer.GetSDLRenderer());
+    m_Scene->RenderAllEntities(m_Renderer.GetSDLRenderer());
     m_Renderer.Display();
 }
 
@@ -50,5 +48,6 @@ void Runtime::Stop()
     m_HasStarted = false;
     m_Window.CleanUp();
     m_Renderer.CleanUp();
-    m_Scene.CleanupScene();
+    m_Scene->CleanupScene();
+    delete m_Scene;
 }

@@ -24,7 +24,7 @@ public:
     bool HasStarted() { return m_HasStarted; }
 
 private:
-    Scene m_Scene;
+    Scene* m_Scene;
     Window m_Window;
     Renderer m_Renderer;
     bool m_HasStarted = false;
