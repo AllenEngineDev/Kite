@@ -8,7 +8,10 @@
 
 Entity::Entity()
 {
-    // All entities will have an ID Component, so it is constructed inside the Entity constructor
+    // This should not be in the constructor.
+    // This is because a new ID Component will be added every time an entity is constructed
+    // Becauses entities are constructed on scene load, enities will end up having 
+    // multiple ID components
     auto idComponent = AddComponentConstruct<IDComponent>(this);
     // This is for ID components to be able to be queried for their parent entities
     idComponent->SetParent(this);
@@ -21,7 +24,7 @@ void Entity::AddComponent(const std::shared_ptr<Component> component)
         m_Components.emplace_back(component);
 }
 
-void Entity::Render(SDL_Renderer* renderer)
+void Entity::Render(SDL_Renderer* renderer, Rect cameraRect)
 {
     // Getting the Sprite Component
     auto sprite = GetComponent<SpriteComponent>();
@@ -33,9 +36,11 @@ void Entity::Render(SDL_Renderer* renderer)
         return;
 
     // Position and size of the entity
-    Vector2<int> targetPosition = transform->GetPosition();
+    transform->SetCameraPosition(transform->GetPosition() - Vector2<int>(cameraRect.X, cameraRect.Y));
+    Vector2<int> targetPosition = transform->GetCameraPosition();
+
     // Multiply the size of the texture by the scale the user wants it
-    Vector2<int> targetScale = sprite->GetSize() * transform->GetScale();
+    Vector2<int> targetScale = (sprite->GetSize() * transform->GetScale()) / Vector2<int>(cameraRect.Width, cameraRect.Height);
     SDL_Rect dstRect { targetPosition.X, targetPosition.Y, targetScale.X, targetScale.Y }; 
     SDL_Rect srcRect;
     
@@ -59,6 +64,7 @@ void Entity::Render(SDL_Renderer* renderer)
 // Returns true if the position passed in is within the bounds of the Sprite component added to this Entity
 // That means this function will return false if there is not a Sprite
 // TODO: Make an implementation that doesn't rely on the presence of a Sprite Component
+// THIS IS FOR MOUSE BASED COLLISION IN THE EDITOR ONLY!
 bool Entity::IsColliding(Vector2<int> posToCheck)
 {
     auto transform = GetComponent<TransformComponent>();
@@ -67,15 +73,11 @@ bool Entity::IsColliding(Vector2<int> posToCheck)
     ASSERT(transform != nullptr, "[ASSERTION FAILED]: TRANSFORM COMPONENT COULD NOT BE FOUND");
     ASSERT(sprite != nullptr, "[ASSERTION FAILED]: SPRITE COMPONENT COULD NOT BE FOUND");
 
-
     Rect rect;
-    rect.X = transform->GetPosition().X;
-    rect.Y = transform->GetPosition().Y;
+    rect.X = transform->GetCameraPosition().X;
+    rect.Y = transform->GetCameraPosition().Y;
     rect.Width = sprite->GetSize().X * transform->GetScale().X;
     rect.Height = sprite->GetSize().Y * transform->GetScale().Y;
-
-    rect.Width = rect.Width;
-    rect.Height = rect.Height;
 
     return rect.IsPositionInBounds(posToCheck);
 

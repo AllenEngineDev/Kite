@@ -2,6 +2,28 @@ SceneName: Test Scene
 Entities:
   - DefaultEntity:
       IDComponent:
+        ID: 9891368821602344679
+      IDComponent:
+        ID: 340774653420452773
+      IDComponent:
+        ID: 17125176478599021085
+      IDComponent:
+        ID: 2026678509594753558
+      IDComponent:
+        ID: 13769361594451732208
+      IDComponent:
+        ID: 1188284127055431597
+      IDComponent:
+        ID: 12286185537529246865
+      IDComponent:
+        ID: 4510286095484585772
+      IDComponent:
+        ID: 2673655509608408087
+      IDComponent:
+        ID: 18089248462450701743
+      IDComponent:
+        ID: 5277639814982428379
+      IDComponent:
         ID: 8757823665038782642
       IDComponent:
         ID: 14619535672730895054
@@ -12,6 +34,6 @@ Entities:
         Scale:
           - 5
           - 5
-        Rotation: 0
+        Rotation: 32
       SpriteComponent:
-        Filepath: C:\Dev\SDLEngine\res\gfx\sprites\enemy-death\enemy-death-2.png
+        Filepath: C:\Dev\SDLEngine\res\gfx\sprites\cherry\cherry-1.png

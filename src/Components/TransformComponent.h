@@ -19,6 +19,7 @@ public:
     
     Vector2<int> GetScale() const { return m_Scale; }
     Vector2<int> GetPosition() const { return m_Position; }
+    Vector2<int> GetCameraPosition() const { return m_CameraBasedPosition; }
     float GetRotationDegrees() const { return m_Rotation; }
 
     void SetPosition(Vector2<int> position)
@@ -30,6 +31,8 @@ public:
     {
         m_Rotation = rotation;
     }
+
+    void SetCameraPosition(Vector2<int> editorPos) { m_CameraBasedPosition = editorPos; }
 
     void SetScale(Vector2<int> scale)
     {
@@ -67,6 +70,7 @@ public:
 
 private:
     Vector2<int> m_Position;
+    Vector2<int> m_CameraBasedPosition;
     Vector2<int> m_Scale;
     float m_Rotation;
 };

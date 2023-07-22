@@ -5,13 +5,13 @@
 
 #include "Components/Component.h"
 #include "Vector.h"
-
+#include "Rect.h"
 
 class Entity
 {
 public:
     Entity(); // For initializing the ID component as all Entities will have this
-    virtual void Render(SDL_Renderer* renderer);
+    virtual void Render(SDL_Renderer* renderer, Rect cameraRect);
     void AddComponent(const std::shared_ptr<Component> component);
 
     // Template function to add a component of a specified type with variadic constructor arguments

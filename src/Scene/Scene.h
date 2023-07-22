@@ -15,7 +15,7 @@ public:
     void CheckForMouseCollisions(Vector2<int> mousePosition);
     
     void AddEntityToWorld(Entity* entity);
-    void RenderAllEntities(SDL_Renderer* renderer);
+    void RenderAllEntities(SDL_Renderer* renderer, Rect cameraRect);
 
     const std::vector<Entity*>& GetEntities() const { return m_Entities; }
 

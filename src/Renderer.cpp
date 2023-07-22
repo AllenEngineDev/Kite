@@ -49,10 +49,11 @@ void Renderer::SubmitSprite(SpriteComponent sprite)
 }
 
 // To render an entity, it must have atleast a TransformComponent and a SpriteComponent
+// DEPRECATED: DOES NOT WORK
 // TODO: Instead of entities handling the rendering, it would be smarter to have the Renderer handle the rendering for the entities
 void Renderer::SubmitEntity(Entity* entity)
 {
-    entity->Render(m_Renderer);
+    // entity->Render(m_Renderer);
 }   
 
 

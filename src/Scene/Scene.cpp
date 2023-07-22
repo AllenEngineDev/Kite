@@ -20,7 +20,6 @@ void Scene::InitializeScene(SDL_Renderer* renderer)
 // TODO: Make your own Engine specific keycodes rather than using SDL Keycodes
 void Scene::OnKeyDown(const Event& keyEvent)
 {
-    std::cout << "Burger durger" << std::endl;
 }
 
 void Scene::OnMousePressed(const MousePressedEvent& mouseEvent)
@@ -33,10 +32,10 @@ void Scene::AddEntityToWorld(Entity* entity)
     m_Entities.emplace_back(entity);
 }
 
-void Scene::RenderAllEntities(SDL_Renderer* renderer)
+void Scene::RenderAllEntities(SDL_Renderer* renderer, Rect cameraRect)
 {
     for (Entity* entity : m_Entities)
-        entity->Render(renderer);
+        entity->Render(renderer, cameraRect);
 }
 
 void Scene::CheckForMouseCollisions(Vector2<int> mousePosition)

@@ -22,12 +22,13 @@ void Runtime::Start()
         std::bind(&Scene::OnKeyDown, m_Scene, std::placeholders::_1));
 
     m_HasStarted = true;
+    m_CameraRect = Rect(0, 0, 1, 1);
 }
 
 void Runtime::Run()
 {
     m_Renderer.Clear();
-    m_Scene->RenderAllEntities(m_Renderer.GetSDLRenderer());
+    m_Scene->RenderAllEntities(m_Renderer.GetSDLRenderer(), m_CameraRect);
     m_Renderer.Display();
 }
 

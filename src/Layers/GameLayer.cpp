@@ -1,6 +1,9 @@
+#include <functional>
+#include <SDL2/SDL_scancode.h>
+
+#include "Engine.h"
 #include "GameLayer.h"
 #include "Scene/SceneSerializer.h"
-#include <functional>
 
 // Called when the ImGUI Layer is attached to the Engine Layer Stack
 // Contains initialization code as well as setting up EventCallbacks
@@ -25,6 +28,14 @@ void GameLayer::OnAttach()
 
     EventManager::Get().AddCallback(EventType::MousePressedEvent,  
         std::bind(&GameLayer::OnMousePressed, this, std::placeholders::_1));
+
+    EventManager::Get().AddCallback(EventType::MouseReleasedEvent,  
+        std::bind(&GameLayer::OnMouseReleased, this, std::placeholders::_1));
+
+    EventManager::Get().AddCallback(EventType::MouseMotionEvent,  
+        std::bind(&GameLayer::OnMouseMotion, this, std::placeholders::_1));
+
+    m_CameraRect = Rect(0, 0, 1, 1);
 }   
 
 
@@ -36,25 +47,52 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender(SDL_Renderer* renderer)
 {
-    m_Scene->RenderAllEntities(renderer);
+    m_Scene->RenderAllEntities(renderer, m_CameraRect);
 }
 
 
 // -------------- EVENT CALLBACKS ------------
 
-// Called when key down is pressed
 void GameLayer::OnKeyDown(Event& event)
 {
     const KeyDownEvent& keyEvent = static_cast<const KeyDownEvent&>(event);
     m_Scene->OnKeyDown(keyEvent);
 }
 
-// Called when the mouse button is down
+void GameLayer::OnMouseMotion(Event& event)
+{
+    const MouseMotionEvent& mouseEvent = static_cast<const MouseMotionEvent&>(event);
+    if (m_IsCameraDragged)
+    {
+        // Calculate the mouse movement delta.
+        Vector2<int> dragDelta = mouseEvent.GetMousePosition() - m_DragStartPosition;
+
+        // Update the camera position based on the mouse movement delta.
+        m_CameraRect.X = m_CameraRect.X - (dragDelta.X * 0.5);
+        m_CameraRect.Y = m_CameraRect.Y - (dragDelta.Y * 0.5);
+
+        // Update the initial mouse position for the next frame.
+        m_DragStartPosition = mouseEvent.GetMousePosition();
+    }
+}
+
 void GameLayer::OnMousePressed(Event& event)
 {
     const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
+
+    m_IsCameraDragged = true;
+
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
+    m_DragStartPosition = pressedPosition;
     m_Scene->CheckForMouseCollisions(pressedPosition);
+}
+
+void GameLayer::OnMouseReleased(Event& event)
+{
+    const MouseReleasedEvent& mouseEvent = static_cast<const MouseReleasedEvent&>(event);
+
+    m_IsCameraDragged = false;
+    Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
 }
 
 
@@ -67,4 +105,7 @@ void GameLayer::OnDetach()
     
     EventManager::Get().RemoveCallback(EventType::MousePressedEvent,
         std::bind(&GameLayer::OnMousePressed, this, std::placeholders::_1));
+
+    EventManager::Get().RemoveCallback(EventType::MouseReleasedEvent,  
+        std::bind(&GameLayer::OnMouseReleased, this, std::placeholders::_1));
 }

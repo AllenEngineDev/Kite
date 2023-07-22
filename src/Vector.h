@@ -29,6 +29,11 @@ struct Vector2
         return Vector2 { X * other.X, Y * other.Y };
     }
 
+    Vector2 operator/(const Vector2<T>& other) const 
+    {
+        return Vector2 { X / other.X, Y / other.Y };
+    }
+
     Vector2 operator+(const Vector2<T>& other) const 
     {
         return Vector2 { X + other.X, Y + other.Y };

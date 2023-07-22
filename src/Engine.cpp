@@ -167,6 +167,36 @@ void Engine::HandleEvents(SDL_Event& event)
             EventManager::Get().EventHappened(MousePressedEvent(viewportPos, realPos));
             break;
         }
+        case SDL_MOUSEBUTTONUP:
+        {
+            // TODO: Make this a function to be DRY
+            int mouseX = event.button.x;
+            int mouseY = event.button.y;
+
+            // Remapping mouse positions to viewport rect positions
+            // Right now, this is as simple as simple subtraction
+            auto viewportPos = Vector2<int>(mouseX - m_ViewportRect.X, mouseY - m_ViewportRect.Y); 
+            auto realPos = Vector2<int>(mouseX, mouseY);
+
+            EventManager::Get().EventHappened(MouseReleasedEvent(viewportPos, realPos));
+
+            break;
+        }
+        case SDL_MOUSEMOTION:
+        {
+            // TODO: Make this a function to be DRY
+            int mouseX = event.button.x;
+            int mouseY = event.button.y;
+
+            // Remapping mouse positions to viewport rect positions
+            // Right now, this is as simple as simple subtraction
+            auto viewportPos = Vector2<int>(mouseX - m_ViewportRect.X, mouseY - m_ViewportRect.Y); 
+            auto realPos = Vector2<int>(mouseX, mouseY);
+
+            EventManager::Get().EventHappened(MouseMotionEvent(viewportPos, realPos));
+
+            break;
+        }
     }
 }
 

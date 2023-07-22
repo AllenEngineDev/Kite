@@ -1,8 +1,9 @@
 #pragma once
-#include "Window.h"
-#include "Renderer.h"
 #include "Scene/Scene.h"
 
+#include "Window.h"
+#include "Renderer.h"
+#include "Rect.h"
 
 class Engine;
 
@@ -27,5 +28,6 @@ private:
     Scene* m_Scene;
     Window m_Window;
     Renderer m_Renderer;
+    Rect m_CameraRect;
     bool m_HasStarted = false;
 };

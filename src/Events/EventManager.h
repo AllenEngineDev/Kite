@@ -21,6 +21,8 @@ enum class EventType
 {
     KeyDownEvent,
     MousePressedEvent,
+    MouseReleasedEvent,
+    MouseMotionEvent,
 
     // Events that pass across the layers
     // TODO: Seperate these events that pass across the layers into its own enum class
@@ -34,7 +36,7 @@ enum class EventType
 class Event
 {
 public:
-    virtual EventType GetType() const { return m_Type; }
+    virtual EventType GetType() const = 0;
 
     // Override this for logging purposes when you want to log an event 
     // Include information about the specific event that happened (eg. key codes)
@@ -174,6 +176,61 @@ public:
 private:
     Vector2<int> m_PressedPosition;
     Vector2<int> m_WindowPressedPosition;
+};
+
+class MouseMotionEvent : public Event
+{
+public:
+    MouseMotionEvent(Vector2<int> mousePosition, Vector2<int> windowMousePosition)
+        : m_MousePosition(mousePosition), m_WindowMousePosition(windowMousePosition) { }
+
+    Vector2<int> GetMousePosition() const { return m_MousePosition; }
+    Vector2<int> GetWindowMousePosition() const { return m_WindowMousePosition; }
+
+    EVENT_CLASS_TYPE(MouseMotionEvent)
+private:
+    Vector2<int> m_MousePosition;
+    Vector2<int> m_WindowMousePosition;
+};
+
+class MouseReleasedEvent : public Event
+{
+public:
+    MouseReleasedEvent(const Vector2<int>& releasedPosition)
+            : m_ReleasedPosition(releasedPosition) { } 
+    MouseReleasedEvent(const Vector2<int>& releasedPosition, 
+        const Vector2<int>& windowReleasedPosition)
+        : m_ReleasedPosition(releasedPosition), m_WindowReleasedPosition(windowReleasedPosition) { } 
+
+        // Returns the position where the mouse was released
+    Vector2<int> GetPressedPosition() const
+    {
+        return m_ReleasedPosition;
+    }
+
+    Vector2<int> GetWindowReleasedPosition() const
+    {
+        return m_WindowReleasedPosition;
+    }
+
+    void SetMousePosition(const Vector2<int>& newPos)  
+    {
+        m_ReleasedPosition = newPos;
+    }
+
+    std::string ToString() const override 
+    {
+        std::stringstream ss;
+        ss << "MouseReleasedEvent: Position: " << m_ReleasedPosition.X
+             << ", " << m_ReleasedPosition.Y;
+        return ss.str();  
+    }
+
+
+    EVENT_CLASS_TYPE(MouseReleasedEvent)
+private:
+    Vector2<int> m_ReleasedPosition;
+    Vector2<int> m_WindowReleasedPosition;
 };
 
 // This is only meant to be used to pass Events along the different layers in the layer stack
