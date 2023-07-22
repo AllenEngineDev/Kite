@@ -1,12 +1,14 @@
 #include "GameLayer.h"
+#include "Scene/SceneSerializer.h"
 #include <functional>
 
 // Called when the ImGUI Layer is attached to the Engine Layer Stack
 // Contains initialization code as well as setting up EventCallbacks
 void GameLayer::OnAttach()
 {   
-    m_Scene.InitializeScene(m_Renderer);
-    m_Scene.SetName("Test Scene");
+    // m_Scene.InitializeScene(m_Renderer);
+    // m_Scene.SetName("Test Scene");
+    m_Scene = SceneSerializer::Get().DeserializeScene(m_Renderer, "../scenes/scene.ksn");
     // Initializing SDL2
     int sdlInit = SDL_Init(SDL_INIT_VIDEO);
     if (sdlInit != 0)
@@ -34,7 +36,7 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender(SDL_Renderer* renderer)
 {
-    m_Scene.RenderAllEntities(renderer);
+    m_Scene->RenderAllEntities(renderer);
 }
 
 
@@ -44,7 +46,7 @@ void GameLayer::OnRender(SDL_Renderer* renderer)
 void GameLayer::OnKeyDown(Event& event)
 {
     const KeyDownEvent& keyEvent = static_cast<const KeyDownEvent&>(event);
-    m_Scene.OnKeyDown(keyEvent);
+    m_Scene->OnKeyDown(keyEvent);
 }
 
 // Called when the mouse button is down
@@ -52,13 +54,13 @@ void GameLayer::OnMousePressed(Event& event)
 {
     const MousePressedEvent& mouseEvent = static_cast<const MousePressedEvent&>(event);
     Vector2<int> pressedPosition = mouseEvent.GetPressedPosition();
-    m_Scene.CheckForMouseCollisions(pressedPosition);
+    m_Scene->CheckForMouseCollisions(pressedPosition);
 }
 
 
 void GameLayer::OnDetach() 
 {
-    m_Scene.CleanupScene();
+    m_Scene->CleanupScene();
     
     EventManager::Get().RemoveCallback(EventType::KeyDownEvent,
         std::bind(&GameLayer::OnKeyDown, this, std::placeholders::_1));

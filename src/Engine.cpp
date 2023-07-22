@@ -28,8 +28,8 @@ bool Engine::Init()
 
     // Initializing game runtime to a few base variables
     // This does not start the runtime. 
-    m_Runtime = Runtime(Vector2<int>(600, 400), "Game Runtime", 
-        (SDL_WindowFlags)SDL_WINDOW_SHOWN);
+    m_Runtime = Runtime(Vector2<int>(800, 600), "Game Runtime", 
+        (SDL_WindowFlags)(SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE));
 
     // Initialiing Renderer
     bool rendererInit = m_Renderer.Init(m_Window.GetSDLWindow());
@@ -132,7 +132,7 @@ void Engine::OnGuiViewportChange(const Event& event)
 
 void Engine::OnPlayButtonPressed(const Event& event)
 {
-    SceneSerializer::Get().SerializeScene(m_GameLayer->GetScene(), "../scenes/scene.ksn");
+    SceneSerializer::Get().SerializeScene(*(m_GameLayer->GetScene()), "../scenes/scene.ksn");
     
     if (m_Runtime.HasStarted())
         m_Runtime.Stop();

@@ -3,6 +3,7 @@ project(SDLEngine)
 
 set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui-docking")
 set(YAML_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp")
+set(NFD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/nfd")
 
 # Find SDL and SDL2_image packages
 find_package(SDL2 REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/vendor/SDL/lib/cmake")
@@ -62,18 +63,22 @@ add_library(imgui
 
 target_include_directories(SDLEngine PRIVATE  "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
 target_include_directories(SDLEngine PRIVATE "${STB_DIR}")
+target_include_directories(SDLEngine PRIVATE "${NFD_DIR}/include")
+
 
 target_link_directories(SDLEngine PUBLIC ${YAML_DIR}/build)
+target_link_directories(SDLEngine PUBLIC ${NFD_DIR}/lib)
+
 
 # Link the SDL, SDL2 image, and IMGUI library
 target_link_libraries(SDLEngine ${SDL2_LIBRARIES} SDL2_image::SDL2_image 
-    imgui yaml-cpp)  
+    imgui yaml-cpp nfd.lib)  
 
 
 # Make SDL2 available to Imgui
 target_include_directories(imgui PUBLIC ${SDL2_INCLUDE_DIRS})
 # imgui/backends/ contains the SDL implementation
 target_include_directories(imgui PUBLIC "${IMGUI_DIR}" "${IMGUI_DIR}/backends")
-# Link SDL and freetypey to imgui
+# Link SDL to imgui
 target_link_libraries(imgui PUBLIC ${SDL2_LIBRARIES} )
 

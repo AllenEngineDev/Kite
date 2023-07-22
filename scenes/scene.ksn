@@ -2,7 +2,9 @@ SceneName: Test Scene
 Entities:
   - DefaultEntity:
       IDComponent:
-        ID: 13580797945412487819
+        ID: 8757823665038782642
+      IDComponent:
+        ID: 14619535672730895054
       TransformComponent:
         Position:
           - 0
@@ -12,4 +14,4 @@ Entities:
           - 5
         Rotation: 0
       SpriteComponent:
-        Filepath: ../res/gfx/sprites/eagle/eagle-attack-1.png
+        Filepath: C:\Dev\SDLEngine\res\gfx\sprites\enemy-death\enemy-death-2.png

@@ -5,13 +5,12 @@
 #include <string>
 
 SpriteComponent::SpriteComponent(SDL_Renderer* renderer, const char* filepath)
-    : m_Filepath(filepath)
+    : m_Renderer(renderer), m_Filepath(std::string(filepath)) 
 {
     m_Texture = IMG_LoadTexture(renderer, filepath);
 
     ASSERT(m_Texture != nullptr, "[ERROR WHEN GETTING TEXTURE]: " 
             <<  SDL_GetError() << " [FILEPATH: " << filepath << " ]");
-    
 
     int width = 0;
     int height = 0;
@@ -19,6 +18,22 @@ SpriteComponent::SpriteComponent(SDL_Renderer* renderer, const char* filepath)
 
     m_Size.X = width;
     m_Size.Y = height;
+}
+
+void SpriteComponent::ChangeTexture(const char* filepath)
+{
+    m_Filepath = std::string(filepath);
+    m_Texture = IMG_LoadTexture(m_Renderer, filepath);
+    ASSERT(m_Texture != nullptr, "[ERROR WHEN GETTING TEXTURE]: " 
+            <<  SDL_GetError() << " [FILEPATH: " << filepath << " ]");
+
+    int width = 0;
+    int height = 0;
+    int err = SDL_QueryTexture(m_Texture, NULL, NULL, &width, &height);
+
+    m_Size.X = width;
+    m_Size.Y = height;
+
 }
 
 // Multiplies the size of the SpriteComponent by another Vectors

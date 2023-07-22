@@ -42,7 +42,7 @@ void SceneSerializer::SerializeScene(const Scene& scene, const std::string& file
     std::ofstream outfile(filepath);
 
     ASSERT(outfile.is_open(), 
-        "[ASSERTION FAILED]: FAILED TO OPEN FILE AT FILEPATH " << filepath);
+        "[ASSERTION FAILED]: [FAILED TO OPEN FILE AT FILEPATH]: " << filepath);
 
     outfile << out.c_str();
     outfile.close();
@@ -52,6 +52,7 @@ Scene* SceneSerializer::DeserializeScene(SDL_Renderer* renderer, const std::stri
 {
     YAML::Node config = YAML::LoadFile(filepath);
     Scene* scene = new Scene;
+    scene->SetName(config["SceneName"].as<std::string>().c_str());
 
     YAML::Node entities = config["Entities"];
 
@@ -60,6 +61,7 @@ Scene* SceneSerializer::DeserializeScene(SDL_Renderer* renderer, const std::stri
     // For the sequence of entities
     for (size_t i = 0; i < entities.size(); i++)
     {
+        // Scene will take ownership and delete it
         Entity* entity = new Entity;
         // For the entity map
         for (YAML::const_iterator it = entities[i].begin(); it != entities[i].end();

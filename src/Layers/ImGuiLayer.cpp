@@ -109,16 +109,16 @@ void ImGuiLayer::SetupGui()
 }
 
 
+// TODO: Fix this, we shouldn't have to check if entity is nullptr on an entity selected event
+// We are doing this in Game.cpp -> CheckForMouseCollisions()
+// IIRC, we make it possible for entity to be nullptr for the properties window to have a nullptr entity in which case it doesn't have to 
+// render any properties
 void ImGuiLayer::OnEntitySelected(Event &event)
 {
     const auto& entityEvent = static_cast<const EntitySelectedEvent&>(event);
     Entity* entity = entityEvent.GetEntity();
     m_PropertiesGUI.Components.SetSelectedEntity(entity);
 
-    // TODO: Fix this, we shouldn't have to check if entity is nullptr on an entity selected event
-    // We are doing this in Game.cpp -> CheckForMouseCollisions()
-    // IIRC, we make it possible for entity to be nullptr for the properties window to have a nullptr entity in which case it doesn't have to 
-    // render any properties
 
 }
 

@@ -25,11 +25,11 @@ public:
 
     void OnUpdate() override;
     void OnRender(SDL_Renderer* renderer) override;
-    Scene GetScene() const { return m_Scene; }
+    Scene* GetScene() const { return m_Scene; }
     LAYER_NAME(GameLayer)
 
 private:
-    Scene m_Scene;
+    Scene* m_Scene;
 
     bool m_Running;
     SDL_Renderer* m_Renderer;
