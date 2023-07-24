@@ -57,12 +57,15 @@ void ImGuiLayer::OnAttach()
 
 void ImGuiLayer::SetupGui()
 {
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_NoTabBar);
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
     // Main Viewport
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
     m_MainViewport.Begin();
+    ImGui::Image((void*) Renderer::GetRenderTexture(), ImVec2(1920, 1080));
     // Calculating the viewport rect so that the Renderer knows where to render
     m_ViewportRect = m_MainViewport.CalculateViewportRect();
     m_MainViewport.End();
+    ImGui::PopStyleVar();
     EventManager::Get().EventHappened(GuiViewportChange(m_ViewportRect));
 
     // Play bar

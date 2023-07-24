@@ -1,15 +1,30 @@
 #include "Core.h"
 #include "Renderer.h"
 
-
+SDL_Texture* Renderer::m_RenderTexture;
 
 // Initializes the renderer. Must be called before any other Renderer functions
 bool Renderer::Init(SDL_Window* window)
 {
     m_Renderer = SDL_CreateRenderer(window, -1, 
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    if (m_Renderer != nullptr)
+    {
+        m_RenderTexture = SDL_CreateTexture(m_Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 
+            1920, 1080);
+        if (m_RenderTexture == nullptr)
+            return false;
+
+        return true;
+    }
+    else 
+    {
+        return false;
+    }
+
+
     
-    return m_Renderer != nullptr;
 }
 
 
@@ -17,6 +32,24 @@ void Renderer::Clear()
 {
     SDL_RenderClear(m_Renderer);
 }
+
+void Renderer::SetTextureAsTarget()
+{
+    // Clearing the texture before resetting it
+    SDL_DestroyTexture(m_RenderTexture);
+    m_RenderTexture = SDL_CreateTexture(m_Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 
+            1920, 1080);
+
+    
+    SDL_SetRenderTarget(m_Renderer, m_RenderTexture);
+}
+
+
+void Renderer::SetWindowAsTarget()
+{   
+    SDL_SetRenderTarget(m_Renderer, NULL);
+}
+
 
 void Renderer::Submit(SDL_Texture* texture)
 {

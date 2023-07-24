@@ -36,10 +36,10 @@ bool Engine::Init()
     ASSERT(rendererInit != false, "[ASSERTION FAILED: FAILED TO INITIALIZE RENDERER]: " << SDL_GetError());
 
     // Adding layers
-    m_GameLayer = new GameLayer(m_Renderer.GetSDLRenderer());
-    m_LayerStack.AttachLayer(m_GameLayer);
-
+    m_GameLayer = new GameLayer(m_Renderer);
     m_GuiLayer = new ImGuiLayer(m_Window.GetSDLWindow(), m_Renderer.GetSDLRenderer());
+    
+    m_LayerStack.AttachLayer(m_GameLayer);
     m_LayerStack.AttachLayer(m_GuiLayer);
     
     m_Running = true;
@@ -126,7 +126,7 @@ void Engine::OnGuiViewportChange(const Event& event)
     viewport.y = m_ViewportRect.Y;
     viewport.w = m_ViewportRect.Width;
     viewport.h = m_ViewportRect.Height;
-    SDL_RenderSetViewport(m_Renderer.GetSDLRenderer(), &viewport);
+    // SDL_RenderSetViewport(m_Renderer.GetSDLRenderer(), &viewport);
 }
 
 
@@ -135,7 +135,9 @@ void Engine::OnPlayButtonPressed(const Event& event)
     SceneSerializer::Get().SerializeScene(*(m_GameLayer->GetScene()), "../scenes/scene.ksn");
     
     if (m_Runtime.HasStarted())
+    {
         m_Runtime.Stop();
+    }
 
     m_Runtime.Start();
     SDL_RaiseWindow(m_Runtime.GetWindow().GetSDLWindow());

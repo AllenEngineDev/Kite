@@ -13,7 +13,7 @@
 class GameLayer : public Layer
 {
 public:
-    GameLayer(SDL_Renderer* renderer)
+    GameLayer(Renderer& renderer)
         : m_Renderer(renderer) { }
 
     // SDL, SDL_IMG, SDL Renderer, IMGUI Initialization code 
@@ -37,5 +37,5 @@ private:
     bool m_IsCameraDragged = false;
     Vector2<int> m_DragStartPosition;
     bool m_Running;
-    SDL_Renderer* m_Renderer;
+    Renderer& m_Renderer;
 };

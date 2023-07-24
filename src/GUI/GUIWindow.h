@@ -10,6 +10,7 @@ public:
         : m_Name(name) { }
     
     void Begin() { ImGui::Begin(m_Name); }
+    void BeginWithFlags(ImGuiWindowFlags flags) { ImGui::Begin(m_Name, nullptr, flags); }
     void End() { ImGui::End(); }
 private:
     const char* m_Name;

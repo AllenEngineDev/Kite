@@ -11,7 +11,7 @@ void GameLayer::OnAttach()
 {   
     // m_Scene.InitializeScene(m_Renderer);
     // m_Scene.SetName("Test Scene");
-    m_Scene = SceneSerializer::Get().DeserializeScene(m_Renderer, "../scenes/scene.ksn");
+    m_Scene = SceneSerializer::Get().DeserializeScene(m_Renderer.GetSDLRenderer(), "../scenes/scene.ksn");
     // Initializing SDL2
     int sdlInit = SDL_Init(SDL_INIT_VIDEO);
     if (sdlInit != 0)
@@ -47,7 +47,9 @@ void GameLayer::OnUpdate()
 
 void GameLayer::OnRender(SDL_Renderer* renderer)
 {
+    m_Renderer.SetTextureAsTarget();
     m_Scene->RenderAllEntities(renderer, m_CameraRect);
+    m_Renderer.SetWindowAsTarget();
 }
 
 

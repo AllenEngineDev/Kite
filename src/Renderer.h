@@ -15,9 +15,13 @@ public:
     void SubmitSprite(SpriteComponent sprite);
     void SubmitEntity(Entity* entity);
     void Display();
+    void SetTextureAsTarget();
+    void SetWindowAsTarget();
     void CleanUp();
 
     SDL_Renderer* GetSDLRenderer() { return m_Renderer; };
+    static SDL_Texture* GetRenderTexture() { return m_RenderTexture; }
 private:
     SDL_Renderer* m_Renderer;
+    static SDL_Texture* m_RenderTexture;
 };
